@@ -12,7 +12,6 @@ module.exports = {
     ]
   },
   devServer: {
-    open: true,
     hot: true
   },
   plugins: [
@@ -21,5 +20,8 @@ module.exports = {
     }),
     new VueLoaderPlugin(),
     new webpack.HotModuleReplacementPlugin()
-  ]
+  ],
+  node: {
+    fs: "empty"
+  }
 };
