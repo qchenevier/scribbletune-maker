@@ -11,6 +11,7 @@ module.exports = {
       { test: /\.css$/, use: ["vue-style-loader", "css-loader"] }
     ]
   },
+  devtool: "inline-source-map",
   devServer: {
     hot: true
   },
