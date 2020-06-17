@@ -1,6 +1,6 @@
 <template>
   <button :class="buttonClass" @click="toggle">
-    <slot>{{ buttonMsg }}</slot>
+    {{ buttonMsg }}
   </button>
 </template>
 
