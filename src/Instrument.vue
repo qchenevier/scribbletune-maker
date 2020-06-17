@@ -14,7 +14,7 @@
       mode="json"
       theme="dawn"
       :onChange="storeParams"
-      name="editor"
+      name="instrument"
       :editorProps="{ $blockScrolling: true }"
     />
   </div>
@@ -55,8 +55,7 @@ export default {
     instrument: {
       handler: function() {
         this.$emit("instrument", this.instrument);
-      },
-      deep: true
+      }
     }
   }
 };
