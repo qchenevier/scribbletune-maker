@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <h1>Scribbletune playground</h1>
-    <PlayPauseButton @playPause="playPause" />
-    <InstrumentChoice @choice="displayChoice" />
+    <PlayPauseButton @playPause="tonePlayPause" />
+    <InstrumentChoice @choice="createInstrument" />
   </div>
 </template>
 
@@ -11,26 +11,36 @@ import PlayPauseButton from "./PlayPauseButton.vue";
 import InstrumentChoice from "./InstrumentChoice.vue";
 import createSession from "./session.js";
 
-const session = createSession();
-
 export default {
   components: { PlayPauseButton, InstrumentChoice },
   data() {
     return {
-      message: "Hello World"
+      instrument: undefined,
+      instrumentParams: undefined,
+      session: undefined
     };
   },
   methods: {
-    playPause: function(play) {
+    tonePlayPause: function(play) {
       if (play) {
         Tone.Transport.start();
       } else {
         Tone.Transport.stop();
       }
     },
-    displayChoice: function(choice) {
-      console.log(choice);
+    createInstrument: function(instrumentName) {
+      let instrumentTemplate = new Tone[instrumentName]();
+      this.instrumentParams = instrumentTemplate.get();
+      this.instrument = new Tone[instrumentName](this.instrumentParams);
     }
+  },
+  watch: {
+    instrument: [
+      function() {
+        Tone.Transport.cancel();
+        this.session = createSession(this.instrument);
+      }
+    ]
   }
 };
 </script>

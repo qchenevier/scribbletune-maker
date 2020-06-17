@@ -1,8 +1,7 @@
 import * as scribble from "scribbletune";
 
-function createSession() {
+function createSession(instrument) {
   const session = new scribble.Session();
-  const instrument = new Tone.Synth();
   const channel = session.createChannel({
     idx: 0,
     instrument: instrument,

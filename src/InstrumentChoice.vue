@@ -26,10 +26,16 @@ export default {
       instrumentName: "Synth"
     };
   },
-  watch: {
-    instrumentName: function() {
+  methods: {
+    emitChoice: function() {
       this.$emit("choice", this.instrumentName);
     }
+  },
+  mounted: function() {
+    this.emitChoice();
+  },
+  watch: {
+    instrumentName: "emitChoice"
   }
 };
 </script>
