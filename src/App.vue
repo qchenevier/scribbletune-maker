@@ -1,30 +1,15 @@
 <template>
   <div id="app">
-    <input v-model="message" type="text" />
-    <h2 class="message">{{ message }}</h2>
-    <h3>Un autre message</h3>
+    <h1>Scribbletune playground</h1>
     <PlayPauseButton @playPause="playPause" />
   </div>
 </template>
 
 <script>
-import * as scribble from "scribbletune";
 import PlayPauseButton from "./PlayPauseButton.vue";
+import createSession from "./session.js";
 
-const session = new scribble.Session();
-const instrument = new Tone.Synth();
-const channel = session.createChannel({
-  idx: 0,
-  instrument: instrument,
-  clips: [
-    {
-      notes: "CM-3 ".repeat(4) + "DM7-3 ".repeat(4) + "GM-2 ".repeat(4),
-      pattern: "[xx_-]".repeat(12)
-    }
-  ]
-});
-
-session.startRow(0);
+const session = createSession();
 
 export default {
   components: { PlayPauseButton },
@@ -49,6 +34,5 @@ export default {
 #app {
   font-size: 18px;
   font-family: "Roboto", sans-serif;
-  color: blue;
 }
 </style>
