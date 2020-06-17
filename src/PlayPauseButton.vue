@@ -13,10 +13,10 @@ export default {
   },
   computed: {
     buttonMsg: function() {
-      return this.isPlaying ? "Play" : "Pause";
+      return this.isPlaying ? "Pause" : "Play";
     },
     buttonClass: function() {
-      return this.isPlaying ? "play" : "pause";
+      return this.isPlaying ? "pause" : "play";
     }
   },
   methods: {
