@@ -2,29 +2,20 @@
   <div id="app">
     <h1>Scribbletune playground</h1>
     <PlayPauseButton @playPause="tonePlayPause" />
-    <Clip @clips="storeClips" />
-    <Instrument
-      @instrument="storeInstrument"
-      @toneInstrument="storeToneInstrument"
-    />
+    <Channel @channel="storeChannel" />
   </div>
 </template>
 
 <script>
 import PlayPauseButton from "./PlayPauseButton.vue";
-import Instrument from "./Instrument.vue";
-import Clip from "./Clip.vue";
+import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
 
 export default {
-  components: { PlayPauseButton, Instrument, Clip },
+  components: { PlayPauseButton, Channel },
   data() {
     return {
-      channel: {
-        clips: undefined,
-        instrument: undefined,
-        toneInstrument: undefined
-      },
+      channel: undefined,
       session: undefined,
       sessionChannels: Array()
     };
@@ -37,14 +28,9 @@ export default {
         Tone.Transport.stop();
       }
     },
-    storeInstrument(instrument) {
-      this.channel.instrument = instrument;
-    },
-    storeToneInstrument(toneInstrument) {
-      this.channel.toneInstrument = toneInstrument;
-    },
-    storeClips(clips) {
-      this.channel.clips = clips;
+    storeChannel(channel) {
+      this.channel = channel;
+      this.createSession();
     },
     createSession() {
       Tone.Transport.cancel();
@@ -59,19 +45,6 @@ export default {
       }
       var clipIdx = 0;
       this.session.startRow(clipIdx);
-    }
-  },
-  watch: {
-    "channel.clips": {
-      deep: true,
-      handler() {
-        this.createSession();
-      }
-    },
-    "channel.toneInstrument": {
-      handler() {
-        this.createSession();
-      }
     }
   }
 };
