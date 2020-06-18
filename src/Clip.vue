@@ -7,7 +7,7 @@
       :showPrintMargin="true"
       :showGutter="true"
       :highlightActiveLine="true"
-      :value="stringifyClips(clips)"
+      :value="stringify(clips)"
       :enableBasicAutocompletion="true"
       width="350"
       mode="json"
@@ -40,8 +40,8 @@ export default {
     updateClips: function() {
       this.clips = JSON.parse(this.clipsInput);
     },
-    stringifyClips: function(clips) {
-      return JSON.stringify(clips, null, 2);
+    stringify: function(object) {
+      return JSON.stringify(object, null, 2);
     }
   },
   mounted: function() {
@@ -51,7 +51,7 @@ export default {
         pattern: "[xx_-][xx_-][xx_-]"
       }
     ];
-    this.clipsInput = this.stringifyClips(this.clips);
+    this.clipsInput = this.stringify(this.clips);
   },
   watch: {
     clips: {
