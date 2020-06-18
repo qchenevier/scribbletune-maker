@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <InstrumentChoice @choice="createInstrument" />
+    <InstrumentChoice @choice="storeName" />
     <button @click="updateParams">
       Update params
     </button>
@@ -8,12 +8,12 @@
       :showPrintMargin="true"
       :showGutter="true"
       :highlightActiveLine="true"
-      :value="JSON.stringify(instrumentParams, null, 2)"
+      :value="stringify(instrument.params)"
       :enableBasicAutocompletion="true"
       width="350"
       mode="json"
       theme="dawn"
-      :onChange="storeParams"
+      :onChange="storeParamsInput"
       name="instrument"
       :editorProps="{ $blockScrolling: true }"
     />
@@ -32,30 +32,53 @@ export default {
   components: { InstrumentChoice, AceEditor },
   data() {
     return {
-      instrument: undefined,
-      instrumentParams: undefined,
-      instrumentParamsInput: undefined
+      toneInstrument: undefined,
+      instrument: {
+        params: undefined,
+        name: undefined
+      },
+      paramsInput: undefined
     };
   },
   methods: {
-    createInstrument: function(instrumentName) {
-      let instrumentTemplate = new Tone[instrumentName]();
-      this.instrumentParams = instrumentTemplate.get();
-      this.instrument = new Tone[instrumentName](this.instrumentParams);
+    stringify(object) {
+      return JSON.stringify(object, null, 2);
     },
-    storeParams: function(jsonString) {
-      this.instrumentParamsInput = jsonString;
+    storeName(instrumentName) {
+      this.instrument.name = instrumentName;
     },
-    updateParams: function() {
-      if (this.instrumentParamsInput) {
-        this.instrumentParams = JSON.parse(this.instrumentParamsInput);
-        this.instrument.set(this.instrumentParams);
+    createToneInstrument() {
+      this.toneInstrument = new Tone[this.instrument.name]();
+      this.instrument.params = this.toneInstrument.get();
+      this.$emit("toneInstrument", this.toneInstrument);
+    },
+    storeParamsInput(jsonString) {
+      this.paramsInput = jsonString;
+    },
+    updateParams() {
+      if (this.paramsInput) {
+        this.instrument.params = JSON.parse(this.paramsInput);
       }
+    },
+    updateInstrument() {
+      this.toneInstrument.set(this.instrument.params);
     }
   },
   watch: {
+    "instrument.name": {
+      handler() {
+        this.createToneInstrument();
+      }
+    },
+    "instrument.params": {
+      deep: true,
+      handler() {
+        this.updateInstrument();
+      }
+    },
     instrument: {
-      handler: function() {
+      deep: true,
+      handler() {
         this.$emit("instrument", this.instrument);
       }
     }

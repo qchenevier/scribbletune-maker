@@ -2,8 +2,11 @@
   <div id="app">
     <h1>Scribbletune playground</h1>
     <PlayPauseButton @playPause="tonePlayPause" />
-    <Clip @clips="createClip" />
-    <Instrument @instrument="createInstrument" />
+    <Clip @clips="storeClips" />
+    <Instrument
+      @instrument="storeInstrument"
+      @toneInstrument="storeToneInstrument"
+    />
   </div>
 </template>
 
@@ -19,7 +22,8 @@ export default {
     return {
       channel: {
         clips: undefined,
-        instrument: undefined
+        instrument: undefined,
+        toneInstrument: undefined
       },
       session: undefined,
       sessionChannels: Array()
@@ -33,20 +37,23 @@ export default {
         Tone.Transport.stop();
       }
     },
-    createInstrument: function(instrument) {
+    storeInstrument: function(instrument) {
       this.channel.instrument = instrument;
     },
-    createClip: function(clips) {
+    storeToneInstrument: function(toneInstrument) {
+      this.channel.toneInstrument = toneInstrument;
+    },
+    storeClips: function(clips) {
       this.channel.clips = clips;
     },
     createSession: function() {
       Tone.Transport.cancel();
       this.session = new scribble.Session();
       var channelIdx = 0;
-      if (this.channel.instrument && this.channel.clips) {
+      if (this.channel.toneInstrument && this.channel.clips) {
         this.sessionChannels[channelIdx] = this.session.createChannel({
           idx: channelIdx,
-          instrument: this.channel.instrument,
+          instrument: this.channel.toneInstrument,
           clips: this.channel.clips
         });
       }
@@ -61,7 +68,7 @@ export default {
         this.createSession();
       }
     },
-    "channel.instrument": {
+    "channel.toneInstrument": {
       handler: function() {
         this.createSession();
       }
