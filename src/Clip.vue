@@ -1,8 +1,6 @@
 <template lang="html">
   <div>
-    <button @click="updateClips">
-      Update clips
-    </button>
+    <button @click="updateClips">Update clips</button>
     <AceEditor
       :showPrintMargin="true"
       :showGutter="true"
@@ -15,7 +13,7 @@
       mode="json"
       theme="dawn"
       :onChange="storeInput"
-      name="clips"
+      :name="`clips-${id}`"
       :editorProps="{ $blockScrolling: true }"
     />
   </div>
@@ -29,6 +27,7 @@ import "brace/theme/dawn";
 
 export default {
   components: { AceEditor },
+  props: ["id"],
   data() {
     return {
       clips: undefined,

@@ -1,7 +1,9 @@
 <template lang="html">
-  <div>
-    <Clip @clips="storeClips" />
+  <div class="column">
+    Channel {{ id }}
+    <Clip :id="id" @clips="storeClips" />
     <Instrument
+      :id="id"
       @instrument="storeInstrument"
       @toneInstrument="storeToneInstrument"
     />
@@ -14,9 +16,13 @@ import Clip from "./Clip.vue";
 
 export default {
   components: { Instrument, Clip },
+  props: {
+    id: { default: 0 }
+  },
   data() {
     return {
       channel: {
+        id: this.id,
         clips: undefined,
         instrument: undefined,
         toneInstrument: undefined
@@ -50,4 +56,9 @@ export default {
 };
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.column {
+  float: left;
+  width: 355;
+}
+</style>

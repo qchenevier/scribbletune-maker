@@ -1,8 +1,13 @@
 <template>
   <div id="app">
-    <h1>Scribbletune playground</h1>
-    <PlayPauseButton @playPause="tonePlayPause" />
-    <Channel @channel="storeChannel" />
+    <div>
+      <h1>Scribbletune playground</h1>
+      <PlayPauseButton @playPause="tonePlayPause" />
+    </div>
+    <div>
+      <Channel id="0" @channel="storeChannel" />
+      <Channel id="1" @channel="storeChannel" />
+    </div>
   </div>
 </template>
 
@@ -15,9 +20,9 @@ export default {
   components: { PlayPauseButton, Channel },
   data() {
     return {
-      channel: undefined,
+      channels: [],
       session: undefined,
-      sessionChannels: Array()
+      sessionChannels: []
     };
   },
   methods: {
@@ -29,19 +34,20 @@ export default {
       }
     },
     storeChannel(channel) {
-      this.channel = channel;
+      this.channels[channel.id] = channel;
       this.createSession();
     },
     createSession() {
       Tone.Transport.cancel();
       this.session = new scribble.Session();
-      var channelIdx = 0;
-      if (this.channel.toneInstrument && this.channel.clips) {
-        this.sessionChannels[channelIdx] = this.session.createChannel({
-          idx: channelIdx,
-          instrument: this.channel.toneInstrument,
-          clips: this.channel.clips
-        });
+      for (const channel of this.channels) {
+        if (channel.toneInstrument && channel.clips) {
+          this.sessionChannels[channel.id] = this.session.createChannel({
+            idx: channel.id,
+            instrument: channel.toneInstrument,
+            clips: channel.clips
+          });
+        }
       }
       var clipIdx = 0;
       this.session.startRow(clipIdx);

@@ -14,7 +14,7 @@
       mode="json"
       theme="dawn"
       :onChange="storeParamsInput"
-      name="instrument"
+      :name="`instrument-${id}`"
       :editorProps="{ $blockScrolling: true }"
     />
   </div>
@@ -30,6 +30,7 @@ import "brace/theme/dawn";
 
 export default {
   components: { InstrumentChoice, AceEditor },
+  props: ["id"],
   data() {
     return {
       toneInstrument: undefined,
