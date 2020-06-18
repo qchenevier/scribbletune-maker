@@ -47,8 +47,10 @@ export default {
       this.instrumentParamsInput = jsonString;
     },
     updateParams: function() {
-      this.instrumentParams = JSON.parse(this.instrumentParamsInput);
-      this.instrument.set(this.instrumentParams);
+      if (this.instrumentParamsInput) {
+        this.instrumentParams = JSON.parse(this.instrumentParamsInput);
+        this.instrument.set(this.instrumentParams);
+      }
     }
   },
   watch: {
