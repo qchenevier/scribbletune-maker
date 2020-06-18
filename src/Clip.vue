@@ -34,17 +34,17 @@ export default {
     };
   },
   methods: {
-    storeInput: function(jsonString) {
+    storeInput(jsonString) {
       this.clipsInput = jsonString;
     },
-    updateClips: function() {
+    updateClips() {
       this.clips = JSON.parse(this.clipsInput);
     },
-    stringify: function(object) {
+    stringify(object) {
       return JSON.stringify(object, null, 2);
     }
   },
-  mounted: function() {
+  mounted() {
     this.clips = [
       {
         notes: "CM-3 CM-3 DM7-3 DM7-3 GM-2 GM-2",
@@ -55,10 +55,10 @@ export default {
   },
   watch: {
     clips: {
-      handler: function() {
+      deep: true,
+      handler() {
         this.$emit("clips", this.clips);
-      },
-      deep: true
+      }
     }
   }
 };

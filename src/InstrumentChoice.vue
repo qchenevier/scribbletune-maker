@@ -27,11 +27,11 @@ export default {
     };
   },
   methods: {
-    emitChoice: function() {
+    emitChoice() {
       this.$emit("choice", this.instrumentName);
     }
   },
-  mounted: function() {
+  mounted() {
     this.emitChoice();
   },
   watch: {

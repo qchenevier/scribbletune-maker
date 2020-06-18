@@ -30,23 +30,23 @@ export default {
     };
   },
   methods: {
-    tonePlayPause: function(play) {
+    tonePlayPause(play) {
       if (play) {
         Tone.Transport.start();
       } else {
         Tone.Transport.stop();
       }
     },
-    storeInstrument: function(instrument) {
+    storeInstrument(instrument) {
       this.channel.instrument = instrument;
     },
-    storeToneInstrument: function(toneInstrument) {
+    storeToneInstrument(toneInstrument) {
       this.channel.toneInstrument = toneInstrument;
     },
-    storeClips: function(clips) {
+    storeClips(clips) {
       this.channel.clips = clips;
     },
-    createSession: function() {
+    createSession() {
       Tone.Transport.cancel();
       this.session = new scribble.Session();
       var channelIdx = 0;
@@ -64,12 +64,12 @@ export default {
   watch: {
     "channel.clips": {
       deep: true,
-      handler: function() {
+      handler() {
         this.createSession();
       }
     },
     "channel.toneInstrument": {
-      handler: function() {
+      handler() {
         this.createSession();
       }
     }
