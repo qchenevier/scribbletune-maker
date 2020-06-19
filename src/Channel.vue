@@ -1,9 +1,11 @@
 <template lang="html">
   <div class="column">
-    Channel {{ id }}
-    <Clip :id="id" @clips="storeClips" />
+    <button @click="$emit('close', index)">
+      Close
+    </button>
+    <Clip :key="`clip-${index}`" @clips="storeClips" />
     <Instrument
-      :id="id"
+      :key="`instrument-${index}`"
       @instrument="storeInstrument"
       @toneInstrument="storeToneInstrument"
     />
@@ -16,18 +18,19 @@ import Clip from "./Clip.vue";
 
 export default {
   components: { Instrument, Clip },
-  props: {
-    id: { default: 0 }
-  },
   data() {
     return {
       channel: {
-        id: this.id,
         clips: undefined,
         instrument: undefined,
         toneInstrument: undefined
       }
     };
+  },
+  computed: {
+    index() {
+      return this.$vnode.key.split("-")[1];
+    }
   },
   methods: {
     storeInstrument(instrument) {
@@ -44,12 +47,12 @@ export default {
     "channel.clips": {
       deep: true,
       handler() {
-        this.$emit("channel", this.channel);
+        this.$emit("channel", this.channel, this.index);
       }
     },
     "channel.toneInstrument": {
       handler() {
-        this.$emit("channel", this.channel);
+        this.$emit("channel", this.channel, this.index);
       }
     }
   }

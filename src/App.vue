@@ -3,10 +3,17 @@
     <div>
       <h1>Scribbletune playground</h1>
       <PlayPauseButton @playPause="tonePlayPause" />
+      <button @click="addChannel">
+        Add channel
+      </button>
     </div>
     <div>
-      <Channel id="0" @channel="storeChannel" />
-      <Channel id="1" @channel="storeChannel" />
+      <Channel
+        v-for="(channel, index) in channels"
+        :key="`channel-${index}`"
+        @channel="storeChannel"
+        @close="removeChannel"
+      />
     </div>
   </div>
 </template>
@@ -16,13 +23,19 @@ import PlayPauseButton from "./PlayPauseButton.vue";
 import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
 
+function randomHash() {
+  return Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padStart(6, "0");
+}
+
 export default {
   components: { PlayPauseButton, Channel },
   data() {
     return {
-      channels: [],
+      channels: {},
       session: undefined,
-      sessionChannels: []
+      sessionChannels: {}
     };
   },
   methods: {
@@ -33,20 +46,32 @@ export default {
         Tone.Transport.stop();
       }
     },
-    storeChannel(channel) {
-      this.channels[channel.id] = channel;
+    addChannel() {
+      let index = randomHash();
+      this.$set(this.channels, index, undefined);
+    },
+    removeChannel(index) {
+      this.$delete(this.channels, index);
+      this.$delete(this.sessionChannels, index);
+      this.createSession();
+    },
+    storeChannel(channel, index) {
+      this.channels[index] = channel;
       this.createSession();
     },
     createSession() {
       Tone.Transport.cancel();
       this.session = new scribble.Session();
-      for (const channel of this.channels) {
-        if (channel.toneInstrument && channel.clips) {
-          this.sessionChannels[channel.id] = this.session.createChannel({
-            idx: channel.id,
-            instrument: channel.toneInstrument,
-            clips: channel.clips
-          });
+      for (const [index, channel] of Object.entries(this.channels)) {
+        if (channel) {
+          if (channel.toneInstrument && channel.clips) {
+            let newSessionChannel = this.session.createChannel({
+              idx: channel.id,
+              instrument: channel.toneInstrument,
+              clips: channel.clips
+            });
+            this.$set(this.sessionChannels, index, newSessionChannel);
+          }
         }
       }
       var clipIdx = 0;

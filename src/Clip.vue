@@ -13,7 +13,8 @@
       mode="json"
       theme="dawn"
       :onChange="storeInput"
-      :name="`clips-${id}`"
+      :name="`clips-${index}`"
+      :key="`clips-${index}`"
       :editorProps="{ $blockScrolling: true }"
     />
   </div>
@@ -27,12 +28,16 @@ import "brace/theme/dawn";
 
 export default {
   components: { AceEditor },
-  props: ["id"],
   data() {
     return {
       clips: undefined,
       clipsInput: undefined
     };
+  },
+  computed: {
+    index() {
+      return this.$vnode.key.split("-")[1];
+    }
   },
   methods: {
     storeInput(jsonString) {

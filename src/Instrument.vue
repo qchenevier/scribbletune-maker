@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <InstrumentChoice @choice="storeName" />
+    <InstrumentChoice :key="`instrument-choice-${index}`" @choice="storeName" />
     <button @click="updateParams">
       Update params
     </button>
@@ -14,7 +14,8 @@
       mode="json"
       theme="dawn"
       :onChange="storeParamsInput"
-      :name="`instrument-${id}`"
+      :name="`instrument-editor-${index}`"
+      :key="`instrument-editor-${index}`"
       :editorProps="{ $blockScrolling: true }"
     />
   </div>
@@ -30,7 +31,6 @@ import "brace/theme/dawn";
 
 export default {
   components: { InstrumentChoice, AceEditor },
-  props: ["id"],
   data() {
     return {
       toneInstrument: undefined,
@@ -40,6 +40,11 @@ export default {
       },
       paramsInput: undefined
     };
+  },
+  computed: {
+    index() {
+      return this.$vnode.key.split("-")[1];
+    }
   },
   methods: {
     stringify(object) {
