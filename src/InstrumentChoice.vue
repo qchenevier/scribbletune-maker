@@ -14,7 +14,6 @@ const instrumentNames = [
   "MonoSynth",
   "NoiseSynth",
   "PluckSynth",
-  "PolySynth",
   "Sampler",
   "Synth"
 ];

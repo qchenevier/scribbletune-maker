@@ -49,7 +49,7 @@ export default {
       this.instrument.name = instrumentName;
     },
     createToneInstrument() {
-      this.toneInstrument = new Tone[this.instrument.name]();
+      this.toneInstrument = new Tone.PolySynth(Tone[this.instrument.name]);
       this.instrument.params = this.toneInstrument.get();
       this.$emit("toneInstrument", this.toneInstrument);
     },
