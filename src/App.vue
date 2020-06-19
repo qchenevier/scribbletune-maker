@@ -6,6 +6,9 @@
       <button @click="addChannel">
         Add channel
       </button>
+      <button @click="saveJson">
+        Save JSON
+      </button>
     </div>
     <div>
       <Channel
@@ -22,6 +25,7 @@
 import PlayPauseButton from "./PlayPauseButton.vue";
 import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
+import { saveAs } from "file-saver";
 
 function randomHash() {
   return Math.floor(Math.random() * 0xffffff)
@@ -58,6 +62,24 @@ export default {
     storeChannel(channel, index) {
       this.channels[index] = channel;
       this.createSession();
+    },
+    saveJson() {
+      function filterToneInstrument(name, value) {
+        if (name == "toneInstrument") {
+          return undefined;
+        } else {
+          return value;
+        }
+      }
+      const serializedChannels = JSON.stringify(
+        Object.values(this.channels),
+        filterToneInstrument,
+        2
+      );
+      var blob = new Blob([serializedChannels], {
+        type: "text/plain;charset=utf-8"
+      });
+      saveAs(blob, "scribbletune-playground-save.json");
     },
     createSession() {
       Tone.Transport.cancel();

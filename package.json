@@ -24,6 +24,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "file-saver": "^2.0.2",
     "scribbletune": "github:qchenevier/scribbletune",
     "vue2-brace-editor": "^2.0.2"
   }
