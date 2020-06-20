@@ -1,6 +1,8 @@
 <template lang="html">
   <div>
-    <InstrumentChoice :key="`instrument-choice-${index}`" @choice="storeName" />
+    <select v-model="instrument.name">
+      <option v-for="n in names" :value="n">{{ n }} </option>
+    </select>
     <button @click="updateParams">
       Update params
     </button>
@@ -8,7 +10,7 @@
       :showPrintMargin="true"
       :showGutter="true"
       :highlightActiveLine="true"
-      :value="stringify(instrument.params)"
+      :value="JSON.stringify(instrument.params, null, 2)"
       :enableBasicAutocompletion="true"
       width="350"
       mode="json"
@@ -22,23 +24,33 @@
 </template>
 
 <script>
-import InstrumentChoice from "./InstrumentChoice.vue";
-
 import brace from "brace";
 import { Ace as AceEditor } from "vue2-brace-editor";
 import "brace/mode/json";
 import "brace/theme/dawn";
 
 export default {
-  components: { InstrumentChoice, AceEditor },
+  components: { AceEditor },
   data() {
     return {
       toneInstrument: undefined,
       instrument: {
         params: undefined,
-        name: undefined
+        name: "Synth"
       },
-      paramsInput: undefined
+      paramsInput: undefined,
+      names: [
+        "AMSynth",
+        "DuoSynth",
+        "FMSynth",
+        "MembraneSynth",
+        "MetalSynth",
+        "MonoSynth",
+        "NoiseSynth",
+        "PluckSynth",
+        "Sampler",
+        "Synth"
+      ]
     };
   },
   computed: {
@@ -47,12 +59,6 @@ export default {
     }
   },
   methods: {
-    stringify(object) {
-      return JSON.stringify(object, null, 2);
-    },
-    storeName(instrumentName) {
-      this.instrument.name = instrumentName;
-    },
     createToneInstrument() {
       this.toneInstrument = new Tone.PolySynth(Tone[this.instrument.name]);
       this.instrument.params = this.toneInstrument.get();
@@ -69,6 +75,9 @@ export default {
     updateInstrument() {
       this.toneInstrument.set(this.instrument.params);
     }
+  },
+  mounted() {
+    this.createToneInstrument();
   },
   watch: {
     "instrument.name": {
