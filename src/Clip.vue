@@ -1,11 +1,11 @@
 <template lang="html">
   <div>
-    <button @click="updateClips">Update clips</button>
+    <button @click="emitClips">Update clips</button>
     <AceEditor
       :showPrintMargin="true"
       :showGutter="true"
       :highlightActiveLine="true"
-      :value="stringify(clips)"
+      :value="JSON.stringify(clips, null, 2)"
       :enableBasicAutocompletion="true"
       :wrapEnabled="true"
       width="350"
@@ -28,10 +28,21 @@ import "brace/theme/dawn";
 
 export default {
   components: { AceEditor },
+  props: {
+    clips: {
+      default() {
+        return [
+          {
+            notes: "CM-3 CM-3 DM7-3 DM7-3 GM-2 GM-2",
+            pattern: "[xx_-][xx_-][xx_-]"
+          }
+        ];
+      }
+    }
+  },
   data() {
     return {
-      clips: undefined,
-      clipsInput: undefined
+      clipsInput: JSON.stringify(this.clips, null, 2)
     };
   },
   computed: {
@@ -43,29 +54,12 @@ export default {
     storeInput(jsonString) {
       this.clipsInput = jsonString;
     },
-    updateClips() {
-      this.clips = JSON.parse(this.clipsInput);
-    },
-    stringify(object) {
-      return JSON.stringify(object, null, 2);
+    emitClips() {
+      this.$emit("input", JSON.parse(this.clipsInput));
     }
   },
   mounted() {
-    this.clips = [
-      {
-        notes: "CM-3 CM-3 DM7-3 DM7-3 GM-2 GM-2",
-        pattern: "[xx_-][xx_-][xx_-]"
-      }
-    ];
-    this.clipsInput = this.stringify(this.clips);
-  },
-  watch: {
-    clips: {
-      deep: true,
-      handler() {
-        this.$emit("clips", this.clips);
-      }
-    }
+    this.emitClips();
   }
 };
 </script>

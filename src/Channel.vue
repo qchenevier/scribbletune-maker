@@ -3,7 +3,7 @@
     <button @click="$emit('close', index)">
       Close
     </button>
-    <Clip :key="`clip-${index}`" @clips="storeClips" />
+    <Clip :key="`clip-${index}`" v-model="channel.clips" />
     <Instrument
       :key="`instrument-${index}`"
       @instrument="storeInstrument"
@@ -38,9 +38,6 @@ export default {
     },
     storeToneInstrument(toneInstrument) {
       this.channel.toneInstrument = toneInstrument;
-    },
-    storeClips(clips) {
-      this.channel.clips = clips;
     }
   },
   watch: {
