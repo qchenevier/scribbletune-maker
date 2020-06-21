@@ -3,9 +3,10 @@
     <div>
       <h1>Scribbletune playground</h1>
       <PlayPauseButton @playPause="tonePlayPause" />
-      <button @click="addChannel">
+      <button @click="() => addChannel()">
         Add channel
       </button>
+      <input type="file" id="file" @change="loadJson" multiple />
       <button @click="saveJson">
         Save JSON
       </button>
@@ -53,11 +54,11 @@ export default {
     tonePlayPause(play) {
       tonePlayPause(play);
     },
-    addChannel() {
+    addChannel(channel) {
       let id = randomHash();
       var container = {
         id: id,
-        channel: undefined
+        channel: channel
       };
       this.$set(this.channels, id, container);
     },
@@ -77,6 +78,20 @@ export default {
         type: "text/plain;charset=utf-8"
       });
       saveAs(blob, "scribbletune-playground-save.json");
+    },
+    loadJson(event) {
+      var reader = new FileReader();
+      // arrow function to access component methods from inside FileReader
+      // see https://stackoverflow.com/questions/40707738/vuejs-accessing-a-method-from-another-method#comment77209572_40708474
+      reader.onload = event => {
+        var channels = JSON.parse(event.target.result);
+        channels.forEach(this.addChannel);
+      };
+
+      let files = event.target.files;
+      for (let i = 0; i < files.length; i++) {
+        reader.readAsText(files[i]);
+      }
     },
     createSession() {
       Tone.Transport.cancel();
