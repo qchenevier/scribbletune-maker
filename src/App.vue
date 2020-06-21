@@ -87,7 +87,6 @@ export default {
         var channels = JSON.parse(event.target.result);
         channels.forEach(this.addChannel);
       };
-
       let files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         reader.readAsText(files[i]);
