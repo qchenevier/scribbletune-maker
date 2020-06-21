@@ -5,7 +5,7 @@
       :showPrintMargin="true"
       :showGutter="true"
       :highlightActiveLine="true"
-      :value="JSON.stringify(clips, null, 2)"
+      :value="JSON.stringify(value, null, 2)"
       :enableBasicAutocompletion="true"
       :wrapEnabled="true"
       width="350"
@@ -29,7 +29,7 @@ import "brace/theme/dawn";
 export default {
   components: { AceEditor },
   props: {
-    clips: {
+    value: {
       default() {
         return [
           {
@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      clipsInput: JSON.stringify(this.clips, null, 2)
+      clipsInput: JSON.stringify(this.value, null, 2)
     };
   },
   computed: {

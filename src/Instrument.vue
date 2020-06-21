@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <select v-model="instrument.name">
+    <select v-model="value.name">
       <option v-for="n in names" :value="n">{{ n }} </option>
     </select>
     <button @click="updateParams">
@@ -10,14 +10,14 @@
       :showPrintMargin="true"
       :showGutter="true"
       :highlightActiveLine="true"
-      :value="JSON.stringify(instrument.params, null, 2)"
+      :value="JSON.stringify(value.params, null, 2)"
       :enableBasicAutocompletion="true"
       width="350"
       mode="json"
       theme="dawn"
       :onChange="storeParamsInput"
-      :name="`instrument-editor-${index}`"
-      :key="`instrument-editor-${index}`"
+      :name="`instrument-editor-${id}`"
+      :key="`instrument-editor-${id}`"
       :editorProps="{ $blockScrolling: true }"
     />
   </div>
@@ -29,15 +29,25 @@ import { Ace as AceEditor } from "vue2-brace-editor";
 import "brace/mode/json";
 import "brace/theme/dawn";
 
+function getDefaultParams(instrumentName) {
+  let instrumentTemplate = new Tone.PolySynth(Tone[instrumentName]);
+  return instrumentTemplate.get();
+}
+
 export default {
   components: { AceEditor },
+  props: {
+    value: {
+      default() {
+        return {
+          name: "Synth",
+          params: getDefaultParams("Synth")
+        };
+      }
+    }
+  },
   data() {
     return {
-      toneInstrument: undefined,
-      instrument: {
-        params: undefined,
-        name: "Synth"
-      },
       paramsInput: undefined,
       names: [
         "AMSynth",
@@ -54,47 +64,34 @@ export default {
     };
   },
   computed: {
-    index() {
+    id() {
       return this.$vnode.key.split("-")[1];
     }
   },
   methods: {
-    createToneInstrument() {
-      this.toneInstrument = new Tone.PolySynth(Tone[this.instrument.name]);
-      this.instrument.params = this.toneInstrument.get();
-      this.$emit("toneInstrument", this.toneInstrument);
-    },
     storeParamsInput(jsonString) {
       this.paramsInput = jsonString;
     },
     updateParams() {
       if (this.paramsInput) {
-        this.instrument.params = JSON.parse(this.paramsInput);
+        this.value.params = JSON.parse(this.paramsInput);
       }
-    },
-    updateInstrument() {
-      this.toneInstrument.set(this.instrument.params);
     }
   },
   mounted() {
-    this.createToneInstrument();
+    this.$emit("input", this.value);
   },
   watch: {
-    "instrument.name": {
+    "value.name": {
       handler() {
-        this.createToneInstrument();
+        this.value.params = getDefaultParams(this.value.name);
+        this.instrumentInput = JSON.stringify(this.value.params, null, 2);
       }
     },
-    "instrument.params": {
+    value: {
       deep: true,
       handler() {
-        this.updateInstrument();
-      }
-    },
-    instrument: {
-      deep: true,
-      handler() {
-        this.$emit("instrument", this.instrument);
+        this.$emit("input", this.value);
       }
     }
   }

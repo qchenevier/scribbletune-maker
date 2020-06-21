@@ -1,14 +1,8 @@
 <template lang="html">
   <div class="column">
-    <button @click="$emit('close', index)">
-      Close
-    </button>
-    <Clip :key="`clip-${index}`" v-model="channel.clips" />
-    <Instrument
-      :key="`instrument-${index}`"
-      @instrument="storeInstrument"
-      @toneInstrument="storeToneInstrument"
-    />
+    <button @click="$emit('close', id)">Close</button>
+    <Clip :key="`clip-${id}`" v-model="value.clips" />
+    <Instrument :key="`instrument-${id}`" v-model="value.instrument" />
   </div>
 </template>
 
@@ -18,38 +12,26 @@ import Clip from "./Clip.vue";
 
 export default {
   components: { Instrument, Clip },
-  data() {
-    return {
-      channel: {
-        clips: undefined,
-        instrument: undefined,
-        toneInstrument: undefined
+  props: {
+    value: {
+      default() {
+        return {
+          clips: undefined,
+          instrument: undefined
+        };
       }
-    };
+    }
   },
   computed: {
-    index() {
+    id() {
       return this.$vnode.key.split("-")[1];
     }
   },
-  methods: {
-    storeInstrument(instrument) {
-      this.channel.instrument = instrument;
-    },
-    storeToneInstrument(toneInstrument) {
-      this.channel.toneInstrument = toneInstrument;
-    }
-  },
   watch: {
-    "channel.clips": {
+    value: {
       deep: true,
       handler() {
-        this.$emit("channel", this.channel, this.index);
-      }
-    },
-    "channel.toneInstrument": {
-      handler() {
-        this.$emit("channel", this.channel, this.index);
+        this.$emit("input", this.value);
       }
     }
   }

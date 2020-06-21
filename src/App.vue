@@ -10,11 +10,10 @@
         Save JSON
       </button>
     </div>
-    <div>
+    <div v-for="(container, id) in channels">
       <Channel
-        v-for="(channel, index) in channels"
-        :key="`channel-${index}`"
-        @channel="storeChannel"
+        :key="`channel-${container.id}`"
+        v-model="container.channel"
         @close="removeChannel"
       />
     </div>
@@ -33,47 +32,45 @@ function randomHash() {
     .padStart(6, "0");
 }
 
+function tonePlayPause(play) {
+  if (play) {
+    Tone.Transport.start();
+  } else {
+    Tone.Transport.stop();
+  }
+}
+
 export default {
   components: { PlayPauseButton, Channel },
   data() {
     return {
       channels: {},
-      session: undefined,
-      sessionChannels: {}
+      toneInstruments: {},
+      session: undefined
     };
   },
   methods: {
     tonePlayPause(play) {
-      if (play) {
-        Tone.Transport.start();
-      } else {
-        Tone.Transport.stop();
-      }
+      tonePlayPause(play);
     },
     addChannel() {
-      let index = randomHash();
-      this.$set(this.channels, index, undefined);
+      let id = randomHash();
+      var container = {
+        id: id,
+        channel: undefined
+      };
+      this.$set(this.channels, id, container);
     },
-    removeChannel(index) {
-      this.$delete(this.channels, index);
-      this.$delete(this.sessionChannels, index);
-      this.createSession();
-    },
-    storeChannel(channel, index) {
-      this.channels[index] = channel;
+    removeChannel(id) {
+      this.$delete(this.channels, id);
       this.createSession();
     },
     saveJson() {
-      function filterToneInstrument(name, value) {
-        if (name == "toneInstrument") {
-          return undefined;
-        } else {
-          return value;
-        }
-      }
       const serializedChannels = JSON.stringify(
-        Object.values(this.channels),
-        filterToneInstrument,
+        Object.values(this.channels).map(container => {
+          return container.channel;
+        }),
+        null,
         2
       );
       var blob = new Blob([serializedChannels], {
@@ -84,20 +81,34 @@ export default {
     createSession() {
       Tone.Transport.cancel();
       this.session = new scribble.Session();
-      for (const [index, channel] of Object.entries(this.channels)) {
-        if (channel) {
-          if (channel.toneInstrument && channel.clips) {
+      this.toneInstruments = {};
+      for (const [id, container] of Object.entries(this.channels)) {
+        if (container.channel) {
+          let instrument = container.channel.instrument;
+          let clips = container.channel.clips;
+          if (instrument.name && clips) {
+            this.toneInstruments[id] = new Tone.PolySynth(
+              Tone[instrument.name]
+            );
+            this.toneInstruments[id].set(instrument.params);
             let newSessionChannel = this.session.createChannel({
-              idx: channel.id,
-              instrument: channel.toneInstrument,
-              clips: channel.clips
+              idx: id,
+              instrument: this.toneInstruments[id],
+              clips: clips
             });
-            this.$set(this.sessionChannels, index, newSessionChannel);
           }
         }
       }
       var clipIdx = 0;
       this.session.startRow(clipIdx);
+    }
+  },
+  watch: {
+    channels: {
+      deep: true,
+      handler() {
+        this.createSession();
+      }
     }
   }
 };
