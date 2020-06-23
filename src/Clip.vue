@@ -1,28 +1,19 @@
 <template lang="html">
   <div>
-    <button @click="emitClips">Update clips</button>
-    <div>
-      <codemirror
-        :ref="`clips-${id}`"
-        :key="`clips-${id}`"
-        v-model="clipsInput"
-        :options="editorOptions"
-      >
-      </codemirror>
-    </div>
+    <JsonEditor
+      :key="`clips-${id}`"
+      :value="value"
+      @input="v => $emit('input', v)"
+      :cssParams="{ height: '100px' }"
+    />
   </div>
 </template>
 
 <script>
-import { codemirror } from "vue-codemirror";
-import "codemirror/lib/codemirror.css";
-import "codemirror/mode/javascript/javascript";
-import "codemirror/theme/idea.css";
-
-import JSON5 from "json5";
+import JsonEditor from "./JsonEditor.vue";
 
 export default {
-  components: { codemirror },
+  components: { JsonEditor },
   props: {
     value: {
       default() {
@@ -35,33 +26,21 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      clipsInput: JSON5.stringify(this.value, null, 2),
-      editorOptions: {
-        tabSize: 2,
-        mode: "text/javascript",
-        theme: "idea",
-        dragDrop: false,
-        line: true
-      }
-    };
-  },
   computed: {
     id() {
       return this.$vnode.key.split("-")[1];
     }
   },
-  methods: {
-    storeInput(jsonString) {
-      this.clipsInput = jsonString;
-    },
-    emitClips() {
-      this.$emit("input", JSON5.parse(this.clipsInput));
-    }
-  },
   mounted() {
-    this.emitClips();
+    this.$emit("input", this.value);
+    // },
+    // watch: {
+    //   value: {
+    //     deep: true,
+    //     handler() {
+    //       this.$emit("input", this.value);
+    //     }
+    //   }
   }
 };
 </script>

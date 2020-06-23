@@ -1,30 +1,14 @@
 <template lang="html">
   <div>
-    <select v-model="value.name">
+    <select v-model="input.name">
       <option v-for="n in names" :value="n">{{ n }} </option>
     </select>
-    <button @click="updateParams">
-      Update params
-    </button>
-    <div>
-      <codemirror
-        :ref="`instrument-editor-${id}`"
-        :key="`instrument-editor-${id}`"
-        v-model="paramsInput"
-        :options="editorOptions"
-      >
-      </codemirror>
-    </div>
+    <JsonEditor :key="`instrument-editor-${id}`" v-model="input.params" />
   </div>
 </template>
 
 <script>
-import { codemirror } from "vue-codemirror";
-import "codemirror/lib/codemirror.css";
-import "codemirror/mode/javascript/javascript";
-import "codemirror/theme/idea.css";
-
-import JSON5 from "json5";
+import JsonEditor from "./JsonEditor.vue";
 
 function getDefaultParams(instrumentName) {
   let instrumentTemplate = new Tone.PolySynth(Tone[instrumentName]);
@@ -32,7 +16,7 @@ function getDefaultParams(instrumentName) {
 }
 
 export default {
-  components: { codemirror },
+  components: { JsonEditor },
   props: {
     value: {
       default() {
@@ -45,7 +29,7 @@ export default {
   },
   data() {
     return {
-      paramsInput: JSON5.stringify(this.value, null, 2),
+      input: this.value,
       names: [
         "AMSynth",
         "DuoSynth",
@@ -57,14 +41,7 @@ export default {
         "PluckSynth",
         "Sampler",
         "Synth"
-      ],
-      editorOptions: {
-        tabSize: 2,
-        mode: "text/javascript",
-        theme: "idea",
-        dragDrop: false,
-        line: true
-      }
+      ]
     };
   },
   computed: {
@@ -72,38 +49,23 @@ export default {
       return this.$vnode.key.split("-")[1];
     }
   },
-  methods: {
-    updateParams() {
-      if (this.paramsInput) {
-        this.value.params = JSON5.parse(this.paramsInput);
-      }
-    }
-  },
   mounted() {
-    this.$emit("input", this.value);
+    this.$emit("input", this.input);
   },
   watch: {
-    "value.name": {
+    "input.name": {
       handler() {
-        this.value.params = getDefaultParams(this.value.name);
-        this.instrumentInput = JSON5.stringify(this.value.params, null, 2);
+        this.input.params = getDefaultParams(this.input.name);
       }
     },
-    value: {
+    input: {
       deep: true,
       handler() {
-        this.$emit("input", this.value);
+        this.$emit("input", this.input);
       }
     }
   }
 };
 </script>
 
-<style scoped>
-/deep/ .CodeMirror {
-  font-size: 12px;
-  border: 1px solid #eee;
-  height: 300px;
-  direction: ltr;
-}
-</style>
+<style scoped></style>
