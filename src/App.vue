@@ -2,6 +2,10 @@
   <div id="app">
     <div>
       <h1>Scribbletune playground</h1>
+      <div>
+        <div class="column" id="oscilloscope"></div>
+        <div class="column" id="spectrogram"></div>
+      </div>
       <PlayPauseButton @playPause="tonePlayPause" />
       <button @click="() => addChannel()">
         Add channel
@@ -117,6 +121,17 @@ export default {
       this.session.startRow(clipIdx);
     }
   },
+  mounted() {
+    let size = [355, 100];
+    var oscilloscope = new Nexus.Oscilloscope("#oscilloscope", {
+      size: size
+    });
+    var spectrogram = new Nexus.Spectrogram("#spectrogram", {
+      size: size
+    });
+    oscilloscope.connect(Tone.Destination);
+    spectrogram.connect(Tone.Destination);
+  },
   watch: {
     channels: {
       deep: true,
@@ -132,5 +147,9 @@ export default {
 #app {
   font-size: 18px;
   font-family: "Roboto", sans-serif;
+}
+.column {
+  float: left;
+  width: 355;
 }
 </style>
