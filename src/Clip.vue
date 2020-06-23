@@ -1,33 +1,28 @@
 <template lang="html">
   <div>
     <button @click="emitClips">Update clips</button>
-    <AceEditor
-      :showPrintMargin="true"
-      :showGutter="true"
-      :highlightActiveLine="true"
-      :value="JSON.stringify(value, null, 2)"
-      :enableBasicAutocompletion="true"
-      :wrapEnabled="true"
-      width="350"
-      height="200"
-      mode="json"
-      theme="dawn"
-      :onChange="storeInput"
-      :name="`clips-${index}`"
-      :key="`clips-${index}`"
-      :editorProps="{ $blockScrolling: true }"
-    />
+    <div>
+      <codemirror
+        :ref="`clips-${id}`"
+        :key="`clips-${id}`"
+        v-model="clipsInput"
+        :options="editorOptions"
+      >
+      </codemirror>
+    </div>
   </div>
 </template>
 
 <script>
-import brace from "brace";
-import { Ace as AceEditor } from "vue2-brace-editor";
-import "brace/mode/json";
-import "brace/theme/dawn";
+import { codemirror } from "vue-codemirror";
+import "codemirror/lib/codemirror.css";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/theme/idea.css";
+
+import JSON5 from "json5";
 
 export default {
-  components: { AceEditor },
+  components: { codemirror },
   props: {
     value: {
       default() {
@@ -42,11 +37,18 @@ export default {
   },
   data() {
     return {
-      clipsInput: JSON.stringify(this.value, null, 2)
+      clipsInput: JSON5.stringify(this.value, null, 2),
+      editorOptions: {
+        tabSize: 2,
+        mode: "text/javascript",
+        theme: "idea",
+        dragDrop: false,
+        line: true
+      }
     };
   },
   computed: {
-    index() {
+    id() {
       return this.$vnode.key.split("-")[1];
     }
   },
@@ -55,7 +57,7 @@ export default {
       this.clipsInput = jsonString;
     },
     emitClips() {
-      this.$emit("input", JSON.parse(this.clipsInput));
+      this.$emit("input", JSON5.parse(this.clipsInput));
     }
   },
   mounted() {
@@ -64,4 +66,11 @@ export default {
 };
 </script>
 
-<style lang="css" scoped></style>
+<style scoped>
+/deep/ .CodeMirror {
+  font-size: 12px;
+  border: 1px solid #eee;
+  height: 100px;
+  direction: ltr;
+}
+</style>

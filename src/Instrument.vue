@@ -6,28 +6,25 @@
     <button @click="updateParams">
       Update params
     </button>
-    <AceEditor
-      :showPrintMargin="true"
-      :showGutter="true"
-      :highlightActiveLine="true"
-      :value="JSON.stringify(value.params, null, 2)"
-      :enableBasicAutocompletion="true"
-      width="350"
-      mode="json"
-      theme="dawn"
-      :onChange="storeParamsInput"
-      :name="`instrument-editor-${id}`"
-      :key="`instrument-editor-${id}`"
-      :editorProps="{ $blockScrolling: true }"
-    />
+    <div>
+      <codemirror
+        :ref="`instrument-editor-${id}`"
+        :key="`instrument-editor-${id}`"
+        v-model="paramsInput"
+        :options="editorOptions"
+      >
+      </codemirror>
+    </div>
   </div>
 </template>
 
 <script>
-import brace from "brace";
-import { Ace as AceEditor } from "vue2-brace-editor";
-import "brace/mode/json";
-import "brace/theme/dawn";
+import { codemirror } from "vue-codemirror";
+import "codemirror/lib/codemirror.css";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/theme/idea.css";
+
+import JSON5 from "json5";
 
 function getDefaultParams(instrumentName) {
   let instrumentTemplate = new Tone.PolySynth(Tone[instrumentName]);
@@ -35,7 +32,7 @@ function getDefaultParams(instrumentName) {
 }
 
 export default {
-  components: { AceEditor },
+  components: { codemirror },
   props: {
     value: {
       default() {
@@ -48,7 +45,7 @@ export default {
   },
   data() {
     return {
-      paramsInput: undefined,
+      paramsInput: JSON5.stringify(this.value, null, 2),
       names: [
         "AMSynth",
         "DuoSynth",
@@ -60,7 +57,14 @@ export default {
         "PluckSynth",
         "Sampler",
         "Synth"
-      ]
+      ],
+      editorOptions: {
+        tabSize: 2,
+        mode: "text/javascript",
+        theme: "idea",
+        dragDrop: false,
+        line: true
+      }
     };
   },
   computed: {
@@ -69,12 +73,9 @@ export default {
     }
   },
   methods: {
-    storeParamsInput(jsonString) {
-      this.paramsInput = jsonString;
-    },
     updateParams() {
       if (this.paramsInput) {
-        this.value.params = JSON.parse(this.paramsInput);
+        this.value.params = JSON5.parse(this.paramsInput);
       }
     }
   },
@@ -85,7 +86,7 @@ export default {
     "value.name": {
       handler() {
         this.value.params = getDefaultParams(this.value.name);
-        this.instrumentInput = JSON.stringify(this.value.params, null, 2);
+        this.instrumentInput = JSON5.stringify(this.value.params, null, 2);
       }
     },
     value: {
@@ -98,4 +99,11 @@ export default {
 };
 </script>
 
-<style lang="css" scoped></style>
+<style scoped>
+/deep/ .CodeMirror {
+  font-size: 12px;
+  border: 1px solid #eee;
+  height: 300px;
+  direction: ltr;
+}
+</style>
