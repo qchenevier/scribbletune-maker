@@ -58,6 +58,15 @@ export default {
       set(channelsArray) {
         channelsArray.map(this.addChannel);
       }
+    },
+    channelsInstrumentName() {
+      return Object.values(this.channels).map(c => c?.instrument?.name);
+    },
+    channelsInstrumentParams() {
+      return Object.values(this.channels).map(c => c?.instrument?.params);
+    },
+    channelsClips() {
+      return Object.values(this.channels).map(c => c?.clips);
     }
   },
   methods: {
@@ -76,28 +85,42 @@ export default {
       this.session = new scribble.Session();
       this.toneInstruments = {};
       for (const [id, channel] of Object.entries(this.channels)) {
-        if (channel) {
-          let instrument = channel.instrument;
-          let clips = channel.clips;
-          if (instrument.name && clips) {
-            this.toneInstruments[id] = new Tone.PolySynth(
-              Tone[instrument.name]
-            );
-            this.toneInstruments[id].set(instrument.params);
-            let newSessionChannel = this.session.createChannel({
-              idx: id,
-              instrument: this.toneInstruments[id],
-              clips: clips
-            });
-          }
+        if (channel?.instrument?.name && channel?.clips) {
+          this.toneInstruments[id] = new Tone.PolySynth(
+            Tone[channel.instrument.name]
+          );
+          this.session.createChannel({
+            idx: id,
+            instrument: this.toneInstruments[id],
+            clips: channel.clips
+          });
         }
       }
       var clipIdx = 0;
       this.session.startRow(clipIdx);
+    },
+    updateToneInstrumentsParams() {
+      for (const [id, channel] of Object.entries(this.channels)) {
+        if (channel?.instrument?.params && this.toneInstruments[id]) {
+          this.toneInstruments[id].set(channel.instrument.params);
+        }
+      }
     }
   },
   watch: {
-    channels: {
+    channels() {
+      this.createSession();
+    },
+    channelsInstrumentName() {
+      this.createSession();
+    },
+    channelsInstrumentParams: {
+      deep: true,
+      handler() {
+        this.updateToneInstrumentsParams();
+      }
+    },
+    channelsClips: {
       deep: true,
       handler() {
         this.createSession();
