@@ -2,14 +2,11 @@
   <div id="app">
     <div>
       <h1>Scribbletune playground</h1>
+      <SaveLoadJson v-model="channelsArray" />
       <Oscilloscope />
       <PlayPauseButton @playPause="tonePlayPause" />
       <button @click="() => addChannel()">
         Add channel
-      </button>
-      <input type="file" id="file" @change="loadJson" multiple />
-      <button @click="saveJson">
-        Save JSON
       </button>
     </div>
     <div v-for="(channel, id) in channels">
@@ -28,6 +25,7 @@ import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
 import { saveAs } from "file-saver";
 import Oscilloscope from "./Oscilloscope.vue";
+import SaveLoadJson from "./SaveLoadJson.vue";
 
 function randomHash() {
   return Math.floor(Math.random() * 0xffffff)
@@ -44,13 +42,23 @@ function tonePlayPause(play) {
 }
 
 export default {
-  components: { PlayPauseButton, Channel, Oscilloscope },
+  components: { PlayPauseButton, Channel, Oscilloscope, SaveLoadJson },
   data() {
     return {
       channels: {},
       toneInstruments: {},
       session: undefined
     };
+  },
+  computed: {
+    channelsArray: {
+      get() {
+        return Object.values(this.channels);
+      },
+      set(channelsArray) {
+        channelsArray.map(this.addChannel);
+      }
+    }
   },
   methods: {
     tonePlayPause(play) {
@@ -62,31 +70,6 @@ export default {
     },
     removeChannel(id) {
       this.$delete(this.channels, id);
-      this.createSession();
-    },
-    saveJson() {
-      const serializedChannels = JSON.stringify(
-        Object.values(this.channels),
-        null,
-        2
-      );
-      var blob = new Blob([serializedChannels], {
-        type: "text/plain;charset=utf-8"
-      });
-      saveAs(blob, "scribbletune-playground-save.json");
-    },
-    loadJson(event) {
-      var reader = new FileReader();
-      // arrow function to access component methods from inside FileReader
-      // see https://stackoverflow.com/questions/40707738/vuejs-accessing-a-method-from-another-method#comment77209572_40708474
-      reader.onload = event => {
-        var channels = JSON.parse(event.target.result);
-        channels.forEach(this.addChannel);
-      };
-      let files = event.target.files;
-      for (let i = 0; i < files.length; i++) {
-        reader.readAsText(files[i]);
-      }
     },
     createSession() {
       Tone.Transport.cancel();
