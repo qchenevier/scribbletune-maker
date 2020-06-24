@@ -12,10 +12,10 @@
         Save JSON
       </button>
     </div>
-    <div v-for="(container, id) in channels">
+    <div v-for="(channel, id) in channels">
       <Channel
-        :key="`channel-${container.id}`"
-        v-model="container.channel"
+        :key="`channel-${id}`"
+        v-model="channels[id]"
         @close="removeChannel"
       />
     </div>
@@ -58,11 +58,7 @@ export default {
     },
     addChannel(channel) {
       let id = randomHash();
-      var container = {
-        id: id,
-        channel: channel
-      };
-      this.$set(this.channels, id, container);
+      this.$set(this.channels, id, channel);
     },
     removeChannel(id) {
       this.$delete(this.channels, id);
@@ -70,9 +66,7 @@ export default {
     },
     saveJson() {
       const serializedChannels = JSON.stringify(
-        Object.values(this.channels).map(container => {
-          return container.channel;
-        }),
+        Object.values(this.channels),
         null,
         2
       );
@@ -98,10 +92,10 @@ export default {
       Tone.Transport.cancel();
       this.session = new scribble.Session();
       this.toneInstruments = {};
-      for (const [id, container] of Object.entries(this.channels)) {
-        if (container.channel) {
-          let instrument = container.channel.instrument;
-          let clips = container.channel.clips;
+      for (const [id, channel] of Object.entries(this.channels)) {
+        if (channel) {
+          let instrument = channel.instrument;
+          let clips = channel.clips;
           if (instrument.name && clips) {
             this.toneInstruments[id] = new Tone.PolySynth(
               Tone[instrument.name]
