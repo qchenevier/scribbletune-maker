@@ -28,6 +28,7 @@
     "file-saver": "^2.0.2",
     "json5": "^2.1.3",
     "scribbletune": "github:qchenevier/scribbletune",
-    "vue-codemirror": "^4.0.6"
+    "vue-codemirror": "^4.0.6",
+    "vue-p5": "^0.8.3"
   }
 }
