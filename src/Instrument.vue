@@ -19,7 +19,7 @@ export default {
   components: { JsonEditor },
   props: {
     value: undefined,
-    names: [],
+    names: undefined,
     height: { default: "300px" },
     closeButton: { default: false }
   },
