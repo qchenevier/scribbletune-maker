@@ -1,12 +1,10 @@
 <template lang="html">
-  <div>
-    <JsonEditor
-      :key="`clips-${id}`"
-      :value="value"
-      @input="v => $emit('input', v)"
-      :cssParams="{ height: '100px' }"
-    />
-  </div>
+  <JsonEditor
+    :key="`clips-${id}`"
+    :value="value"
+    @input="v => $emit('input', v)"
+    height="100px"
+  />
 </template>
 
 <script>
@@ -33,23 +31,8 @@ export default {
   },
   mounted() {
     this.$emit("input", this.value);
-    // },
-    // watch: {
-    //   value: {
-    //     deep: true,
-    //     handler() {
-    //       this.$emit("input", this.value);
-    //     }
-    //   }
   }
 };
 </script>
 
-<style scoped>
-/deep/ .CodeMirror {
-  font-size: 12px;
-  border: 1px solid #eee;
-  height: 100px;
-  direction: ltr;
-}
-</style>
+<style scoped></style>
