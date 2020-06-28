@@ -4,9 +4,13 @@
       :ref="`editor-${id}`"
       :key="`editor-${id}`"
       v-model="input"
-      @blur="$emit('input', JSON5.parse(input))"
+      @focus="background = '#FFFFFF'"
+      @blur="
+        $emit('input', JSON5.parse(input));
+        background = '#F7F7F7';
+      "
       :options="editorOptions"
-      :style="cssParams"
+      :style="{ height, background }"
     >
     </codemirror>
   </div>
@@ -35,20 +39,13 @@ export default {
         };
       }
     },
-    cssParams: {
-      default() {
-        return {
-          fontSize: "12px",
-          height: "300px",
-          border: "1px solid #eee"
-        };
-      }
-    }
+    height: { default: "300px" }
   },
   data() {
     return {
       JSON5: JSON5,
-      input: JSON5.stringify(this.value, null, 2)
+      input: JSON5.stringify(this.value, null, 2),
+      background: "#F7F7F7"
     };
   },
   computed: {
@@ -66,9 +63,9 @@ export default {
 
 <style scoped>
 /deep/ .CodeMirror {
-  font-size: var(--fontSize);
-  border: var(--border);
+  font-size: 12;
   height: var(--height);
   direction: ltr;
+  background: var(--background);
 }
 </style>

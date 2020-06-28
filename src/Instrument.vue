@@ -3,50 +3,49 @@
     <select v-model="input.name">
       <option v-for="n in names" :value="n">{{ n }} </option>
     </select>
-    <JsonEditor :key="`instrument-editor-${id}`" v-model="input.params" />
+    <button v-if="closeButton" @click="$emit('close', id)">Close</button>
+    <JsonEditor
+      :key="`instrument-editor-${id}`"
+      v-model="input.params"
+      :height="height"
+    />
   </div>
 </template>
 
 <script>
 import JsonEditor from "./JsonEditor.vue";
 
-function getDefaultParams(instrumentName) {
-  let instrumentTemplate = new Tone.PolySynth(Tone[instrumentName]);
-  return instrumentTemplate.get();
-}
-
 export default {
   components: { JsonEditor },
   props: {
-    value: {
-      default() {
-        return {
-          name: "Synth",
-          params: getDefaultParams("Synth")
-        };
-      }
-    }
+    value: undefined,
+    names: [],
+    height: { default: "300px" },
+    closeButton: { default: false }
   },
   data() {
     return {
-      input: this.value,
-      names: [
-        "AMSynth",
-        "DuoSynth",
-        "FMSynth",
-        "MembraneSynth",
-        "MetalSynth",
-        "MonoSynth",
-        "NoiseSynth",
-        "PluckSynth",
-        "Sampler",
-        "Synth"
-      ]
+      input: this.value
     };
   },
   computed: {
     id() {
       return this.$vnode.key.split("-")[1];
+    },
+    cssParams() {
+      return {
+        fontSize: "12px",
+        height: this.height,
+        border: "1px solid #eee"
+      };
+    }
+  },
+  created() {
+    if (!this.input) {
+      this.input = {
+        name: this.names[0],
+        params: new Tone[this.names[0]]().get()
+      };
     }
   },
   mounted() {
@@ -55,7 +54,7 @@ export default {
   watch: {
     "input.name": {
       handler() {
-        this.input.params = getDefaultParams(this.input.name);
+        this.input.params = new Tone[this.input.name]().get();
       }
     },
     input: {

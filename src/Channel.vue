@@ -1,14 +1,34 @@
 <template lang="html">
   <div class="column">
     <button @click="$emit('close', id)">Close</button>
-    <Clip :key="`clip-${id}`" v-model="value.clips" />
-    <Instrument :key="`instrument-${id}`" v-model="value.instrument" />
+    <button @click="() => addEffect()">Add effect</button>
+    <Clip :key="`clip-${id}`" v-model="input.clips" />
+    <Instrument
+      :key="`instrument-${id}`"
+      :names="instrumentNames"
+      v-model="input.instrument"
+    />
+    <Instrument
+      v-for="(effect, idEffect) in input.effects"
+      :key="`effect-${idEffect}`"
+      :names="effectNames"
+      v-model="input.effects[idEffect]"
+      :closeButton="true"
+      @close="removeEffect"
+      height="100px"
+    />
   </div>
 </template>
 
 <script>
 import Instrument from "./Instrument.vue";
 import Clip from "./Clip.vue";
+
+function randomHash() {
+  return Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padStart(6, "0");
+}
 
 export default {
   components: { Instrument, Clip },
@@ -17,21 +37,68 @@ export default {
       default() {
         return {
           clips: undefined,
-          instrument: undefined
+          instrument: undefined,
+          effects: {}
         };
       }
     }
+  },
+  data() {
+    return {
+      input: this.value,
+      instrumentNames: [
+        "AMSynth",
+        "DuoSynth",
+        "FMSynth",
+        "MembraneSynth",
+        "MetalSynth",
+        "MonoSynth",
+        "NoiseSynth",
+        "PluckSynth",
+        "Sampler",
+        "Synth"
+      ],
+      effectNames: [
+        "AutoFilter",
+        "AutoPanner",
+        "AutoWah",
+        "BitCrusher",
+        "Chebyshev",
+        "Chorus",
+        "Distortion",
+        "FeedbackDelay",
+        "Freeverb",
+        "FrequencyShifter",
+        "JCReverb",
+        "Phaser",
+        "PingPongDelay",
+        "PitchShift",
+        "Reverb",
+        "StereoWidener",
+        "Tremolo",
+        "Vibrato"
+      ]
+    };
   },
   computed: {
     id() {
       return this.$vnode.key.split("-")[1];
     }
   },
+  methods: {
+    addEffect(effect) {
+      let id = randomHash();
+      this.$set(this.input.effects, id, effect);
+    },
+    removeEffect(id) {
+      this.$delete(this.input.effects, id);
+    }
+  },
   watch: {
-    value: {
+    input: {
       deep: true,
       handler() {
-        this.$emit("input", this.value);
+        this.$emit("input", this.input);
       }
     }
   }
