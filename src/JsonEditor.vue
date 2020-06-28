@@ -6,7 +6,7 @@
       v-model="input"
       @focus="background = '#FFFFFF'"
       @blur="
-        $emit('input', JSON5.parse(input));
+        $emit('input', YAML.parse(input));
         background = '#F7F7F7';
       "
       :options="editorOptions"
@@ -22,7 +22,7 @@ import "codemirror/lib/codemirror.css";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/theme/idea.css";
 
-import JSON5 from "json5";
+import YAML from "yaml";
 
 export default {
   components: { codemirror },
@@ -43,8 +43,8 @@ export default {
   },
   data() {
     return {
-      JSON5: JSON5,
-      input: JSON5.stringify(this.value, null, 2),
+      YAML: YAML,
+      input: YAML.stringify(this.value),
       background: "#F7F7F7"
     };
   },
@@ -55,7 +55,7 @@ export default {
   },
   watch: {
     value() {
-      this.input = JSON5.stringify(this.value, null, 2);
+      this.input = YAML.stringify(this.value);
     }
   }
 };
