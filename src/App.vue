@@ -33,14 +33,6 @@ function randomHash() {
     .padStart(6, "0");
 }
 
-function tonePlayPause(play) {
-  if (play) {
-    Tone.Transport.start();
-  } else {
-    Tone.Transport.stop();
-  }
-}
-
 export default {
   components: { PlayPauseButton, Channel, Oscilloscope, SaveLoadJson },
   data() {
@@ -71,7 +63,7 @@ export default {
   },
   methods: {
     tonePlayPause(play) {
-      tonePlayPause(play);
+      play ? Tone.Transport.start() : Tone.Transport.stop();
     },
     addChannel(channel) {
       let id = randomHash();
