@@ -1,5 +1,5 @@
 <template lang="html">
-  <JsonEditor
+  <ParamsEditor
     :key="`clips-${id}`"
     :value="value"
     @input="v => $emit('input', v)"
@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import JsonEditor from "./JsonEditor.vue";
+import ParamsEditor from "./ParamsEditor.vue";
 
 export default {
-  components: { JsonEditor },
+  components: { ParamsEditor },
   props: {
     value: {
       default() {

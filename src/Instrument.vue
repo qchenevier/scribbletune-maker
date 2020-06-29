@@ -4,7 +4,7 @@
       <option v-for="n in names" :value="n">{{ n }} </option>
     </select>
     <button v-if="closeButton" @click="$emit('close', id)">Close</button>
-    <JsonEditor
+    <ParamsEditor
       :key="`instrument-editor-${id}`"
       v-model="input.params"
       :height="height"
@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import JsonEditor from "./JsonEditor.vue";
+import ParamsEditor from "./ParamsEditor.vue";
 
 export default {
-  components: { JsonEditor },
+  components: { ParamsEditor },
   props: {
     value: undefined,
     names: undefined,
