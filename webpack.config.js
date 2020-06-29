@@ -11,16 +11,11 @@ module.exports = {
       { test: /\.css$/, use: ["vue-style-loader", "css-loader"] }
     ]
   },
-  devtool: "inline-source-map",
-  devServer: {
-    hot: true
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html"
     }),
-    new VueLoaderPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new VueLoaderPlugin()
   ],
   node: {
     fs: "empty"
