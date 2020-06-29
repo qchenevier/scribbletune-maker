@@ -19,8 +19,7 @@
 <script>
 import { codemirror } from "vue-codemirror";
 import "codemirror/lib/codemirror.css";
-import "codemirror/mode/javascript/javascript";
-import "codemirror/theme/idea.css";
+import "codemirror/mode/yaml/yaml";
 
 import YAML from "yaml";
 
@@ -32,8 +31,7 @@ export default {
       default() {
         return {
           tabSize: 2,
-          mode: "text/javascript",
-          theme: "idea",
+          mode: "text/yaml",
           dragDrop: false,
           line: true
         };
@@ -67,5 +65,7 @@ export default {
   height: var(--height);
   direction: ltr;
   background: var(--background);
+  font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono,
+    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
 }
 </style>
