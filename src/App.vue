@@ -56,7 +56,6 @@ export default {
       return Object.values(this.channels)
         .filter(c => c)
         .map(c => {
-          console.log(c);
           return {
             instrumentName: c?.instrument?.name,
             effectNames: c?.effects
