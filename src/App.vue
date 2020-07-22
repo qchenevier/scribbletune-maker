@@ -23,7 +23,6 @@
 import PlayPauseButton from "./PlayPauseButton.vue";
 import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
-import { saveAs } from "file-saver";
 import Oscilloscope from "./Oscilloscope.vue";
 import SaveLoadJson from "./SaveLoadJson.vue";
 
