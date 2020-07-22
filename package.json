@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "file-saver": "^2.0.2",
-    "scribbletune": "github:qchenevier/scribbletune",
+    "scribbletune": "github:qchenevier/scribbletune#offline-rendering-fix",
     "vue-codemirror": "^4.0.6",
     "vue-p5": "^0.8.3",
     "yaml": "^1.10.0"

@@ -48,25 +48,37 @@ export default {
       get() {
         return Object.values(this.channels);
       },
-      set(channelsArray) {
-        channelsArray.map(this.addChannel);
+      set(newChannelsArray) {
+        newChannelsArray.map(this.addChannel);
       }
     },
-    channelsInstrumentName() {
-      return Object.values(this.channels).map(c => c?.instrument?.name);
+    watchPropsForSessionRebuild() {
+      return Object.values(this.channels)
+        .filter(c => c)
+        .map(c => {
+          console.log(c);
+          return {
+            instrumentName: c?.instrument?.name,
+            effectNames: c?.effects
+              ? Object.values(c.effects).map(e => e?.name)
+              : undefined,
+            clips: c?.clips,
+            offlineRendering: c?.offlineRendering,
+            instrumentParams: c?.offlineRendering
+              ? c?.instrument?.params
+              : undefined,
+            effectParams: c?.offlineRendering
+              ? c?.effects
+                ? Object.values(c.effects).map(e => e?.params)
+                : undefined
+              : undefined
+          };
+        });
     },
-    channelsInstrumentParams() {
+    watchInstrumentParamsForUpdate() {
       return Object.values(this.channels).map(c => c?.instrument?.params);
     },
-    channelsClips() {
-      return Object.values(this.channels).map(c => c?.clips);
-    },
-    channelsEffectName() {
-      return Object.values(this.channels).map(c =>
-        c?.effects ? Object.values(c.effects).map(e => e?.name) : undefined
-      );
-    },
-    channelsEffectParams() {
+    watchEffectParamsForUpdate() {
       return Object.values(this.channels).map(c =>
         c?.effects ? Object.values(c.effects).map(e => e?.params) : undefined
       );
@@ -83,36 +95,44 @@ export default {
     removeChannel(id) {
       this.$delete(this.channels, id);
     },
+    createToneEffects(id, channel) {
+      function createEffect(effectName, idFull) {
+        this.toneEffects[idFull] = new Tone[effectName]();
+        return this.toneEffects[idFull];
+      }
+      let effects = channel?.effects
+        ? Object.entries(channel.effects)
+            .map(([idEffect, effect]) =>
+              effect
+                ? createEffect.bind(this)(effect.name, `${id}-${idEffect}`)
+                : undefined
+            )
+            .filter(i => i)
+        : undefined;
+      return effects;
+    },
+    createChannel([id, channel]) {
+      if (channel?.instrument?.name && channel?.clips) {
+        this.toneInstruments[id] = new Tone.PolySynth(
+          Tone[channel.instrument.name]
+        );
+        const effects = this.createToneEffects(id, channel);
+        const channelParams = {
+          idx: id,
+          instrument: this.toneInstruments[id],
+          clips: channel.clips,
+          offlineRendering: channel.offlineRendering,
+          effects: effects ? effects : []
+        };
+        this.session.createChannel(channelParams);
+      }
+    },
     createSession() {
       Tone.Transport.cancel();
       this.session = new scribble.Session();
       this.toneInstruments = {};
       this.toneEffects = {};
-      Object.entries(this.channels).forEach(([id, channel]) => {
-        if (channel?.instrument?.name && channel?.clips) {
-          this.toneInstruments[id] = new Tone.PolySynth(
-            Tone[channel.instrument.name]
-          );
-          let effects = Object.entries(channel.effects)
-            .map(([idEffect, effect]) => {
-              if (effect) {
-                let idFull = `${id}-${idEffect}`;
-                this.toneEffects[idFull] = new Tone[effect.name]();
-                return this.toneEffects[idFull];
-              }
-            })
-            .filter(i => i);
-          let channelParameters = {
-            idx: id,
-            instrument: this.toneInstruments[id],
-            clips: channel.clips
-          };
-          if (effects.length) {
-            channelParameters.effects = effects;
-          }
-          this.session.createChannel(channelParameters);
-        }
-      });
+      Object.entries(this.channels).forEach(this.createChannel);
       var clipIdx = 0;
       this.session.startRow(clipIdx);
     },
@@ -137,31 +157,22 @@ export default {
     }
   },
   watch: {
-    channels() {
-      this.createSession();
+    watchPropsForSessionRebuild: {
+      deep: true,
+      handler() {
+        this.createSession();
+      }
     },
-    channelsInstrumentName() {
-      this.createSession();
-    },
-    channelsInstrumentParams: {
+    watchInstrumentParamsForUpdate: {
       deep: true,
       handler() {
         this.updateToneInstrumentsParams();
       }
     },
-    channelsEffectName() {
-      this.createSession();
-    },
-    channelsEffectParams: {
+    watchEffectParamsForUpdate: {
       deep: true,
       handler() {
         this.updateToneEffectsParams();
-      }
-    },
-    channelsClips: {
-      deep: true,
-      handler() {
-        this.createSession();
       }
     }
   }
@@ -170,7 +181,6 @@ export default {
 
 <style>
 #app {
-  font-size: 18px;
   font-family: "Roboto", sans-serif;
 }
 .column {
