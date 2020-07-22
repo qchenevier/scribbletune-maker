@@ -8,7 +8,7 @@ You can check the [demo here](https://qchenevier.github.io/scribbletune-playgrou
 
 - `git clone` the repo
 - `npm install` to install the project dependencies
-- `npm run serve` to start the app development server
+- `npm run dev` to start the app development server
 - go to http://localhost:8080 to see the app
 
 ## Deployment
