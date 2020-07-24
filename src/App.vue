@@ -4,7 +4,7 @@
       <h1>Scribbletune playground</h1>
       <SaveLoadJson v-model="channelsArray" />
       <Oscilloscope />
-      <PlayPauseButton @playPause="tonePlayPause" />
+      <PlayPauseButton v-model="isPlaying" />
       <button @click="() => addChannel()">
         Add channel
       </button>
@@ -39,7 +39,8 @@ export default {
       channels: {},
       toneInstruments: {},
       toneEffects: {},
-      session: undefined
+      session: undefined,
+      isPlaying: false
     };
   },
   computed: {
@@ -74,17 +75,23 @@ export default {
         });
     },
     watchInstrumentParamsForUpdate() {
-      return Object.values(this.channels).map(c => c?.instrument?.params);
+      return Object.values(this.channels).map(c =>
+        !c?.offlineRendering ? c?.instrument?.params : undefined
+      );
     },
     watchEffectParamsForUpdate() {
       return Object.values(this.channels).map(c =>
-        c?.effects ? Object.values(c.effects).map(e => e?.params) : undefined
+        !c?.offlineRendering && c?.effects
+          ? undefined
+          : c?.effects
+          ? Object.values(c.effects).map(e => e?.params)
+          : undefined
       );
     }
   },
   methods: {
-    tonePlayPause(play) {
-      play ? Tone.Transport.start() : Tone.Transport.stop();
+    tonePlayPause() {
+      this.isPlaying ? Tone.Transport.start() : Tone.Transport.stop();
     },
     addChannel(channel) {
       let id = randomHash();
@@ -114,7 +121,9 @@ export default {
         this.toneInstruments[id] = new Tone.PolySynth(
           Tone[channel.instrument.name]
         );
+        this.updateToneInstrumentsParams();
         const effects = this.createToneEffects(id, channel);
+        this.updateToneEffectsParams();
         const channelParams = {
           idx: id,
           instrument: this.toneInstruments[id],
@@ -126,6 +135,8 @@ export default {
       }
     },
     createSession() {
+      this.isPlaying = false;
+      this.tonePlayPause(); // can't wait for the "isPlaying" watcher to be triggered, otherwise, offline rendered player have a huge offset.
       Tone.Transport.cancel();
       this.session = new scribble.Session();
       this.toneInstruments = {};
@@ -171,6 +182,11 @@ export default {
       deep: true,
       handler() {
         this.updateToneEffectsParams();
+      }
+    },
+    isPlaying: {
+      handler() {
+        this.tonePlayPause();
       }
     }
   }

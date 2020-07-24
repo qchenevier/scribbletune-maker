@@ -1,28 +1,15 @@
 <template>
-  <button :class="buttonClass" @click="toggle">
-    {{ buttonMsg }}
+  <button :class="this.value ? 'pause' : 'play'" @click="toggle">
+    {{ this.value ? "Pause" : "Play" }}
   </button>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      isPlaying: false
-    };
-  },
-  computed: {
-    buttonMsg: function() {
-      return this.isPlaying ? "Pause" : "Play";
-    },
-    buttonClass: function() {
-      return this.isPlaying ? "pause" : "play";
-    }
-  },
+  props: { value: { default: false } },
   methods: {
     toggle: function() {
-      this.isPlaying = !this.isPlaying;
-      this.$emit("playPause", this.isPlaying);
+      this.$emit("input", !this.value);
     }
   }
 };
