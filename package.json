@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "file-saver": "^2.0.2",
-    "scribbletune": "^3.9.0",
+    "scribbletune": "github:qchenevier/scribbletune",
     "vue-codemirror": "^4.0.6",
     "vue-p5": "^0.8.3",
     "yaml": "^1.10.0"
