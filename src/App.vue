@@ -32,8 +32,14 @@ function randomHash() {
     .padStart(6, "0");
 }
 
-scribble.addChord(["1P", "5P", "8P", "12P", "15P", "19P"], [], "fat");
-scribble.addChord(["1P", "5P", "8P", "12P", "15P", "17M", "19P"], [], "fatM");
+scribble.addChord(["1P", "5P", "8P", "12P"], [], "double");
+scribble.addChord(["1P", "5P", "8P", "10M", "12P"], [], "doubleM");
+scribble.addChord(["1P", "5P", "8P", "12P", "15P", "19P"], [], "triple");
+scribble.addChord(
+  ["1P", "5P", "8P", "12P", "15P", "17M", "19P"],
+  [],
+  "tripleM"
+);
 
 export default {
   components: { PlayPauseButton, Channel, Oscilloscope, SaveLoadJson },
