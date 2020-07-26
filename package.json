@@ -1,6 +1,6 @@
 {
-  "name": "scribbletune-vue",
-  "version": "0.0.1",
+  "name": "scribbletune-maker",
+  "version": "0.3.3",
   "description": "",
   "main": "index.js",
   "scripts": {
