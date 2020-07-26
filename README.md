@@ -1,8 +1,11 @@
-# Scribbletune playground with Vue
+# Scribbletune Maker
 
-A [Vue.js](https://vuejs.org/) playground to experiment sound synthesis with [Tone.js (v14.7.7)](https://tonejs.github.io/docs/14.7.7/) & melody making with [scribbletune](https://scribbletune.com/)
+A light digital audio workstation, fully in-browser, leveraging WebAudio, built with:
 
-You can check the [demo here](https://qchenevier.github.io/scribbletune-playground-vue/).
+- [scribbletune](https://scribbletune.com/) & [Tone.js](https://tonejs.github.io/docs/)
+- [Vue.js](https://vuejs.org/)
+
+You can check the [demo here](https://qchenevier.github.io/scribbletune-maker/).
 
 ## Installation & Usage
 

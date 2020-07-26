@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div>
-      <h1>Scribbletune playground</h1>
+      <h1>Scribbletune Maker</h1>
       <SaveLoadJson v-model="channelsArray" />
       <Oscilloscope />
       <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
