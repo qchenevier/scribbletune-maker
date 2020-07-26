@@ -4,7 +4,7 @@
       <h1>Scribbletune playground</h1>
       <SaveLoadJson v-model="channelsArray" />
       <Oscilloscope />
-      <PlayPauseButton v-model="isPlaying" />
+      <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
       <button @click="() => addChannel()">
         Add channel
       </button>
@@ -43,7 +43,8 @@ export default {
       toneInstruments: {},
       toneEffects: {},
       session: undefined,
-      isPlaying: false
+      isPlaying: false,
+      isRendering: false
     };
   },
   computed: {
@@ -127,11 +128,17 @@ export default {
         this.updateToneInstrumentsParams();
         const effects = this.createToneEffects(id, channel);
         this.updateToneEffectsParams();
+        if (channel.offlineRendering) {
+          this.isRendering = true;
+        }
         const channelParams = {
           idx: id,
           instrument: this.toneInstruments[id],
           clips: channel.clips,
           offlineRendering: channel.offlineRendering,
+          offlineRenderingCallback: () => {
+            this.isRendering = false;
+          },
           effects: effects ? effects : []
         };
         this.session.createChannel(channelParams);

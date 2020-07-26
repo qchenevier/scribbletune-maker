@@ -1,12 +1,16 @@
 <template>
-  <button :class="this.value ? 'pause' : 'play'" @click="toggle">
-    {{ this.value ? "Pause" : "Play" }}
+  <button
+    :class="this.rendering ? 'rendering' : this.value ? 'pause' : 'play'"
+    @click="toggle"
+    :disabled="this.rendering"
+  >
+    {{ this.rendering ? "Rendering" : this.value ? "Pause" : "Play" }}
   </button>
 </template>
 
 <script>
 export default {
-  props: { value: { default: false } },
+  props: { value: { default: false }, rendering: { default: false } },
   methods: {
     toggle: function() {
       this.$emit("input", !this.value);
@@ -22,5 +26,9 @@ export default {
 
 .pause {
   color: grey;
+}
+
+.rendering {
+  color: red;
 }
 </style>
