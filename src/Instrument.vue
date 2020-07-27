@@ -8,6 +8,7 @@
       :key="`instrument-editor-${id}`"
       v-model="input.params"
       :height="height"
+      :defaultValue="defaultValue"
     />
   </div>
 </template>
@@ -46,6 +47,7 @@ export default {
         name: this.names[0],
         params: new Tone[this.names[0]]().get()
       };
+      this.defaultValue = this.input.params;
     }
   },
   mounted() {
@@ -55,6 +57,7 @@ export default {
     "input.name": {
       handler() {
         this.input.params = new Tone[this.input.name]().get();
+        this.defaultValue = this.input.params;
       }
     },
     input: {

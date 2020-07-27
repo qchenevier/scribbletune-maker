@@ -4,10 +4,10 @@
       :ref="`editor-${id}`"
       :key="`editor-${id}`"
       v-model="input"
-      @focus="background = '#FFFFFF'"
+      @focus="background = '#0064FF0C'"
       @blur="
         $emit('input', YAML.parse(input));
-        background = '#F7F7F7';
+        background = '#FFFFFF';
       "
       :options="editorOptions"
       :style="{ height, background }"
@@ -22,6 +22,7 @@ import "codemirror/lib/codemirror.css";
 import "codemirror/mode/yaml/yaml";
 
 import YAML from "yaml";
+import * as Diff from "diff";
 
 export default {
   components: { codemirror },
@@ -37,13 +38,15 @@ export default {
         };
       }
     },
+    defaultValue: undefined,
     height: { default: "300px" }
   },
   data() {
     return {
       YAML: YAML,
       input: YAML.stringify(this.value),
-      background: "#F7F7F7"
+      background: "#FFFFFF",
+      highlightedLinesNumbers: []
     };
   },
   computed: {
@@ -51,9 +54,50 @@ export default {
       return this.$vnode.key.split("-")[1];
     }
   },
+  methods: {
+    computeHighlightedLinesNumbers() {
+      let lineNumbers = [];
+      let iLine = 0;
+      if (this.defaultValue) {
+        Diff.diffLines(YAML.stringify(this.defaultValue), this.input)
+          .filter(line => !line.removed)
+          .forEach(line => {
+            if (line.added) {
+              for (let i = 0; i < line.count; i++) {
+                lineNumbers.push(i + iLine);
+              }
+            }
+            iLine += line.count;
+          });
+      }
+      this.highlightedLinesNumbers = lineNumbers;
+    }
+  },
+  created() {
+    this.computeHighlightedLinesNumbers();
+  },
   watch: {
     value() {
       this.input = YAML.stringify(this.value);
+      this.computeHighlightedLinesNumbers();
+    },
+    highlightedLinesNumbers: {
+      handler(newLineNumbers, oldLineNumbers) {
+        oldLineNumbers?.forEach(i =>
+          this.$refs[`editor-${this.id}`].cminstance.removeLineClass(
+            i,
+            "wrap",
+            "highlighted"
+          )
+        );
+        newLineNumbers.forEach(i =>
+          this.$refs[`editor-${this.id}`].cminstance.addLineClass(
+            i,
+            "wrap",
+            "highlighted"
+          )
+        );
+      }
     }
   }
 };
@@ -67,5 +111,10 @@ export default {
   background: var(--background);
   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono,
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+}
+
+/deep/ .highlighted {
+  font-weight: bold;
+  background-color: rgba(0, 100, 255, 0.2);
 }
 </style>
