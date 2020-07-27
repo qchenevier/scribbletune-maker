@@ -5,6 +5,8 @@
       <SaveLoadJson v-model="channelsArray" />
       <Oscilloscope />
       <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
+      <input type="checkbox" id="checkbox-replay" v-model="autoreplay" />
+      <label for="checkbox-replay">Autoreplay</label>
       <button @click="() => addChannel()">
         Add channel
       </button>
@@ -50,7 +52,8 @@ export default {
       toneEffects: {},
       session: undefined,
       isPlaying: false,
-      isRendering: false
+      isRendering: false,
+      autoreplay: false
     };
   },
   computed: {
@@ -200,9 +203,12 @@ export default {
         this.updateToneEffectsParams();
       }
     },
-    isPlaying: {
-      handler() {
-        this.tonePlayPause();
+    isPlaying() {
+      this.tonePlayPause();
+    },
+    isRendering() {
+      if (!this.isRendering && this.autoreplay) {
+        this.isPlaying = true;
       }
     }
   }
@@ -212,6 +218,7 @@ export default {
 <style>
 #app {
   font-family: "Roboto", sans-serif;
+  font-size: 14;
 }
 .column {
   float: left;

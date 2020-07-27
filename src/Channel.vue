@@ -3,7 +3,7 @@
     <button @click="$emit('close', id)">Close</button>
     <button @click="() => addEffect()">Add effect</button>
     <input type="checkbox" id="checkbox" v-model="input.offlineRendering" />
-    <label for="checkbox">Pre-render: {{ input.offlineRendering }}</label>
+    <label for="checkbox">Prerender</label>
     <Clip :key="`clip-${id}`" v-model="input.clips" />
     <Instrument
       :key="`instrument-${id}`"
