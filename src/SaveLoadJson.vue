@@ -18,7 +18,7 @@ export default {
       var blob = new Blob([serializedChannels], {
         type: "text/plain;charset=utf-8"
       });
-      saveAs(blob, "scribbletune-playground-save.json");
+      saveAs(blob, "scribbletune-maker-save.json");
     },
     loadJson(event) {
       var reader = new FileReader();
