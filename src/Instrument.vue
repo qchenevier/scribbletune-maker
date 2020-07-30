@@ -21,12 +21,13 @@ export default {
   props: {
     value: undefined,
     names: undefined,
-    height: { default: "300px" },
+    height: { default: "260px" },
     closeButton: { default: false }
   },
   data() {
     return {
-      input: this.value
+      input: this.value,
+      defaultValue: ""
     };
   },
   computed: {

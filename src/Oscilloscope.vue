@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     setup(sketch) {
-      sketch.createCanvas(350, 50);
+      sketch.createCanvas(260, 50);
       sketch.frameRate(20);
       this.analyzer = new Tone.Waveform(2048);
       this.fft = new Tone.FFT(1024);
@@ -27,7 +27,7 @@ export default {
     },
     draw(sketch) {
       sketch.background(255);
-      let width = 350;
+      let width = 260;
       let height = 50;
       let waveform = this.analyzer.getValue();
       let spectrum = this.fft.getValue();

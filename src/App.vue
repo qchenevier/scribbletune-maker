@@ -1,8 +1,8 @@
 <template>
   <div id="app">
+    <h1>Scribbletune Maker</h1>
     <div class="row">
       <div class="column">
-        <h1>Scribbletune Maker</h1>
         <SaveLoadJson v-model="scribbletuneMakerSession" />
         <Oscilloscope />
         <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
@@ -73,8 +73,8 @@ export default {
       autoreplay: false,
       playPatternId: randomHash(),
       playPattern: {
-        channelPatterns: [],
-        clipDuration: "2:0:0"
+        clipDuration: "2:0:0",
+        channelPatterns: []
       }
     };
   },
@@ -305,7 +305,7 @@ export default {
 }
 .column {
   float: left;
-  width: 355;
+  width: 260;
 }
 .row:after {
   content: "";

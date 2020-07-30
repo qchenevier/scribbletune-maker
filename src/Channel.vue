@@ -64,7 +64,6 @@ export default {
         "MonoSynth",
         "NoiseSynth",
         "PluckSynth",
-        "Sampler",
         "Synth"
       ],
       effectNames: [
@@ -120,6 +119,6 @@ export default {
 <style lang="css" scoped>
 .column {
   float: left;
-  width: 355;
+  width: 260;
 }
 </style>
