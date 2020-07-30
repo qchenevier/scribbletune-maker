@@ -3,7 +3,7 @@
     <div class="row">
       <div class="column">
         <h1>Scribbletune Maker</h1>
-        <SaveLoadJson v-model="channelsArray" />
+        <SaveLoadJson v-model="scribbletuneMakerSession" />
         <Oscilloscope />
         <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
         <input type="checkbox" id="checkbox-replay" v-model="autoreplay" />
@@ -79,12 +79,17 @@ export default {
     };
   },
   computed: {
-    channelsArray: {
+    scribbletuneMakerSession: {
       get() {
-        return Object.values(this.channels);
+        return {
+          channels: Object.values(this.channels),
+          playPattern: this.playPattern
+        };
       },
-      set(newChannelsArray) {
-        newChannelsArray.map(this.addChannel);
+      set(loadedScribbltuneMakerSession) {
+        this.channels = {};
+        loadedScribbltuneMakerSession.channels.forEach(this.addChannel);
+        this.playPattern = loadedScribbltuneMakerSession.playPattern;
       }
     },
     watchPropsForSessionRebuild() {
