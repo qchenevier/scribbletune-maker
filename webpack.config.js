@@ -8,7 +8,11 @@ module.exports = {
     rules: [
       { test: /\.js$/, use: "babel-loader" },
       { test: /\.vue$/, use: "vue-loader" },
-      { test: /\.css$/, use: ["vue-style-loader", "css-loader"] }
+      { test: /\.css$/, use: ["vue-style-loader", "css-loader"] },
+      {
+        test: /\.(png|jpe?g|gif|svg|ttf|woff|woff2|otf|eot)$/,
+        use: ["file-loader"]
+      }
     ]
   },
   plugins: [

@@ -1,11 +1,14 @@
 <template>
-  <button
-    :class="this.rendering ? 'rendering' : this.value ? 'pause' : 'play'"
+  <b-button
+    size="is-small"
+    :type="this.value ? 'is-dark' : 'is-success'"
     @click="toggle"
-    :disabled="this.rendering"
+    :loading="this.rendering"
+    outlined
   >
-    {{ this.rendering ? "Rendering" : this.value ? "Pause" : "Play" }}
-  </button>
+    <b-icon size="is-small" :icon="this.value ? 'pause' : 'play'" />
+    {{ this.value ? "Pause" : "Play" }}
+  </b-button>
 </template>
 
 <script>
@@ -19,16 +22,4 @@ export default {
 };
 </script>
 
-<style>
-.play {
-  color: green;
-}
-
-.pause {
-  color: grey;
-}
-
-.rendering {
-  color: red;
-}
-</style>
+<style></style>

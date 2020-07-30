@@ -1,9 +1,16 @@
 <template>
   <div>
-    <input type="file" id="file" @change="loadJson" multiple />
-    <button @click="saveJson">
+    <b-input
+      size="is-small"
+      type="file"
+      id="file"
+      @change="loadJson"
+      multiple
+    />
+    <b-button size="is-small" @click="saveJson">
+      <b-icon size="is-small" icon="download" />
       Save JSON
-    </button>
+    </b-button>
   </div>
 </template>
 

@@ -15,6 +15,7 @@
     "@babel/preset-env": "^7.10.2",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
+    "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "vue": "^2.6.11",
     "vue-loader": "^15.9.2",
@@ -26,6 +27,8 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@mdi/font": "^5.4.55",
+    "buefy": "^0.8.20",
     "diff": "^4.0.2",
     "file-saver": "^2.0.2",
     "scribbletune": "github:qchenevier/scribbletune#play-pattern",

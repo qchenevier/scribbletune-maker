@@ -1,28 +1,41 @@
 <template>
   <div id="app">
-    <h1>Scribbletune Maker</h1>
-    <div class="row">
-      <div class="column">
+    <b-navbar>
+      <template slot="brand">
+        <b-navbar-item>
+          <h1 class="title">Scribbletune Maker</h1>
+        </b-navbar-item>
+        <b-navbar-item>
+          <Oscilloscope />
+        </b-navbar-item>
+      </template>
+    </b-navbar>
+    <div class="columns">
+      <div class="column is-narrow">
         <SaveLoadJson v-model="scribbletuneMakerSession" />
-        <Oscilloscope />
         <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
-        <input type="checkbox" id="checkbox-replay" v-model="autoreplay" />
-        <label for="checkbox-replay">Autoreplay</label>
-        <button @click="() => addChannel()">
+        <b-switch size="is-small" v-model="autoreplay">Autoreplay</b-switch>
+        <b-button size="is-small" @click="() => addChannel()"
+          ><b-icon icon="plus" size="is-small" />
           Add channel
-        </button>
+        </b-button>
       </div>
-      <div class="column">
-        <input type="checkbox" id="checkbox-" v-model="isPlayPattern" />
-        <label for="checkbox"
-          >Play {{ isPlayPattern ? "pattern" : "row" }}</label
-        >
-        <input v-model="rowNumberToPlay" :disabled="isPlayPattern" />
-        <PlayPattern :key="playPatternId" v-model="playPattern" />
+      <div class="column is-narrow">
+        <div class="box">
+          <b-switch size="is-small" v-model="isPlayPattern">
+            Play {{ isPlayPattern ? "pattern" : "row" }}</b-switch
+          >
+          <input v-model="rowNumberToPlay" :disabled="isPlayPattern" />
+          <PlayPattern
+            v-if="isPlayPattern"
+            :key="playPatternId"
+            v-model="playPattern"
+          />
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div v-for="(channel, id) in channels">
+    <div class="columns">
+      <div class="column is-narrow" v-for="(channel, id) in channels">
         <Channel
           :key="`channel-${id}`"
           v-model="channels[id]"
@@ -298,18 +311,4 @@ export default {
 };
 </script>
 
-<style>
-#app {
-  font-family: "Roboto", sans-serif;
-  font-size: 14;
-}
-.column {
-  float: left;
-  width: 260;
-}
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-</style>
+<style></style>

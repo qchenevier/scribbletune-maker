@@ -1,19 +1,31 @@
 <template lang="html">
-  <div class="column">
+  <div class="box">
     <div>
-      <input v-model.trim.lazy="input.idx" />
-      <button @click="$emit('close', id)">Close</button>
+      <!-- lazy input change for buefy component https://github.com/buefy/buefy/issues/401 -->
+      <b-input
+        size="is-small"
+        :value="input.idx"
+        @change.native="input.idx = $event.target.value"
+      />
+      <b-button size="is-small" @click="$emit('close', id)"
+        ><b-icon icon="close" size="is-small" /> Close</b-button
+      >
     </div>
     <div>
-      <button @click="() => addEffect()">Add effect</button>
-      <input type="checkbox" id="checkbox" v-model="input.offlineRendering" />
-      <label for="checkbox">Prerender</label>
+      <b-button size="is-small" @click="() => addEffect()"
+        ><b-icon icon="auto-fix" size="is-small" />
+        &nbsp; Add effect
+      </b-button>
+      <b-switch size="is-small" v-model="input.offlineRendering"
+        >Prerender</b-switch
+      >
     </div>
-    <Clip :key="`clip-${id}`" v-model="input.clips" />
+    <Clip class="box" :key="`clip-${id}`" v-model="input.clips" />
     <Instrument
       :key="`instrument-${id}`"
       :names="instrumentNames"
       v-model="input.instrument"
+      class="box"
     />
     <Instrument
       v-for="(effect, idEffect) in input.effects"
@@ -23,6 +35,7 @@
       :closeButton="true"
       @close="removeEffect"
       height="100px"
+      class="box"
     />
   </div>
 </template>
@@ -117,7 +130,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.column {
+.column-homemade {
   float: left;
   width: 260;
 }

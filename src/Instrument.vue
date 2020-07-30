@@ -1,9 +1,11 @@
 <template lang="html">
   <div>
-    <select v-model="input.name">
+    <b-select size="is-small" v-model="input.name">
       <option v-for="n in names" :value="n">{{ n }} </option>
-    </select>
-    <button v-if="closeButton" @click="$emit('close', id)">Close</button>
+    </b-select>
+    <b-button size="is-small" v-if="closeButton" @click="$emit('close', id)"
+      ><b-icon icon="close" size="is-small" /> Close</b-button
+    >
     <ParamsEditor
       :key="`instrument-editor-${id}`"
       v-model="input.params"
