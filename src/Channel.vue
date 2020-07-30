@@ -1,9 +1,14 @@
 <template lang="html">
   <div class="column">
-    <button @click="$emit('close', id)">Close</button>
-    <button @click="() => addEffect()">Add effect</button>
-    <input type="checkbox" id="checkbox" v-model="input.offlineRendering" />
-    <label for="checkbox">Prerender</label>
+    <div>
+      <input v-model.trim.lazy="input.idx" />
+      <button @click="$emit('close', id)">Close</button>
+    </div>
+    <div>
+      <button @click="() => addEffect()">Add effect</button>
+      <input type="checkbox" id="checkbox" v-model="input.offlineRendering" />
+      <label for="checkbox">Prerender</label>
+    </div>
     <Clip :key="`clip-${id}`" v-model="input.clips" />
     <Instrument
       :key="`instrument-${id}`"
@@ -41,7 +46,8 @@ export default {
           clips: undefined,
           instrument: undefined,
           effects: {},
-          offlineRendering: false
+          offlineRendering: false,
+          idx: undefined
         };
       }
     }
@@ -82,6 +88,9 @@ export default {
         "Vibrato"
       ]
     };
+  },
+  created() {
+    this.input.idx = this.value.idx || this.id;
   },
   computed: {
     id() {

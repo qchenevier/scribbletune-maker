@@ -1,22 +1,34 @@
 <template>
   <div id="app">
-    <div>
-      <h1>Scribbletune Maker</h1>
-      <SaveLoadJson v-model="channelsArray" />
-      <Oscilloscope />
-      <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
-      <input type="checkbox" id="checkbox-replay" v-model="autoreplay" />
-      <label for="checkbox-replay">Autoreplay</label>
-      <button @click="() => addChannel()">
-        Add channel
-      </button>
+    <div class="row">
+      <div class="column">
+        <h1>Scribbletune Maker</h1>
+        <SaveLoadJson v-model="channelsArray" />
+        <Oscilloscope />
+        <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
+        <input type="checkbox" id="checkbox-replay" v-model="autoreplay" />
+        <label for="checkbox-replay">Autoreplay</label>
+        <button @click="() => addChannel()">
+          Add channel
+        </button>
+      </div>
+      <div class="column">
+        <input type="checkbox" id="checkbox-" v-model="isPlayPattern" />
+        <label for="checkbox"
+          >Play {{ isPlayPattern ? "pattern" : "row" }}</label
+        >
+        <input v-model="rowNumberToPlay" :disabled="isPlayPattern" />
+        <PlayPattern :key="playPatternId" v-model="playPattern" />
+      </div>
     </div>
-    <div v-for="(channel, id) in channels">
-      <Channel
-        :key="`channel-${id}`"
-        v-model="channels[id]"
-        @close="removeChannel"
-      />
+    <div class="row">
+      <div v-for="(channel, id) in channels">
+        <Channel
+          :key="`channel-${id}`"
+          v-model="channels[id]"
+          @close="removeChannel"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -27,6 +39,7 @@ import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
 import Oscilloscope from "./Oscilloscope.vue";
 import SaveLoadJson from "./SaveLoadJson.vue";
+import PlayPattern from "./PlayPattern.vue";
 
 function randomHash() {
   return Math.floor(Math.random() * 0xffffff)
@@ -34,17 +47,19 @@ function randomHash() {
     .padStart(6, "0");
 }
 
-scribble.addChord(["1P", "5P", "8P", "12P"], [], "double");
-scribble.addChord(["1P", "5P", "8P", "10M", "12P"], [], "doubleM");
-scribble.addChord(["1P", "5P", "8P", "12P", "15P", "19P"], [], "triple");
-scribble.addChord(
-  ["1P", "5P", "8P", "12P", "15P", "17M", "19P"],
-  [],
-  "tripleM"
-);
+scribble.addChord(["1P", "5P", "8P", "12P"], [], "D");
+scribble.addChord(["1P", "5P", "8P", "10M", "12P"], [], "DM");
+scribble.addChord(["1P", "5P", "8P", "12P", "15P", "19P"], [], "T");
+scribble.addChord(["1P", "5P", "8P", "12P", "15P", "17M", "19P"], [], "TM");
 
 export default {
-  components: { PlayPauseButton, Channel, Oscilloscope, SaveLoadJson },
+  components: {
+    PlayPauseButton,
+    Channel,
+    Oscilloscope,
+    SaveLoadJson,
+    PlayPattern
+  },
   data() {
     return {
       channels: {},
@@ -52,8 +67,15 @@ export default {
       toneEffects: {},
       session: undefined,
       isPlaying: false,
+      isPlayPattern: false,
+      rowNumberToPlay: 0,
       isRendering: false,
-      autoreplay: false
+      autoreplay: false,
+      playPatternId: randomHash(),
+      playPattern: {
+        channelPatterns: [],
+        clipDuration: "2:0:0"
+      }
     };
   },
   computed: {
@@ -76,6 +98,7 @@ export default {
               : undefined,
             clips: c?.clips,
             offlineRendering: c?.offlineRendering,
+            idx: c?.idx,
             instrumentParams: c?.offlineRendering
               ? c?.instrument?.params
               : undefined,
@@ -86,6 +109,15 @@ export default {
               : undefined
           };
         });
+    },
+    channelsIdx() {
+      return [
+        ...new Set(
+          Object.values(this.channels)
+            .filter(c => c)
+            .map(c => c.idx)
+        )
+      ];
     },
     watchInstrumentParamsForUpdate() {
       return Object.values(this.channels).map(c =>
@@ -100,11 +132,31 @@ export default {
           ? Object.values(c.effects).map(e => e?.params)
           : undefined
       );
+    },
+    watchPlayParams() {
+      return this.isPlayPattern ? this.playPattern : this.rowNumberToPlay;
     }
   },
   methods: {
+    createToneTransport() {
+      this.session.channels.forEach(c =>
+        c.clips.filter(c => c.name === "Player").forEach(c => c.unsync().sync())
+      );
+      if (this.isPlayPattern) {
+        this.session.play(this.playPattern);
+      } else {
+        this.session.startRow(this.rowNumberToPlay);
+      }
+    },
+    cancelToneTransport() {
+      this.isPlaying = false;
+      this.tonePlayPause(); // can't wait for the "isPlaying" watcher to be triggered, otherwise, offline rendered player have a huge offset.
+      Tone.Transport.cancel();
+      Tone.Transport.stop();
+    },
     tonePlayPause() {
-      this.isPlaying ? Tone.Transport.start() : Tone.Transport.stop();
+      this.isPlaying ? Tone.Transport.start() : Tone.Transport.pause();
+      // this.isPlaying ? Tone.Transport.start() : Tone.Transport.stop();
     },
     addChannel(channel) {
       let id = randomHash();
@@ -141,7 +193,7 @@ export default {
           this.isRendering = true;
         }
         const channelParams = {
-          idx: id,
+          idx: channel.idx || id,
           instrument: this.toneInstruments[id],
           clips: channel.clips,
           offlineRendering: channel.offlineRendering,
@@ -154,15 +206,12 @@ export default {
       }
     },
     createSession() {
-      this.isPlaying = false;
-      this.tonePlayPause(); // can't wait for the "isPlaying" watcher to be triggered, otherwise, offline rendered player have a huge offset.
-      Tone.Transport.cancel();
+      this.cancelToneTransport();
       this.session = new scribble.Session();
       this.toneInstruments = {};
       this.toneEffects = {};
       Object.entries(this.channels).forEach(this.createChannel);
-      var clipIdx = 0;
-      this.session.startRow(clipIdx);
+      this.createToneTransport();
     },
     updateToneInstrumentsParams() {
       Object.entries(this.channels).forEach(([id, channel]) => {
@@ -182,6 +231,26 @@ export default {
           });
         }
       });
+    },
+    updatePlayPattern() {
+      this.$set(
+        this.playPattern,
+        "channelPatterns",
+        this.playPattern.channelPatterns.filter(c =>
+          this.channelsIdx.includes(c.channelIdx)
+        )
+      );
+      const orphanChannelsIdx = this.channelsIdx.filter(
+        idx =>
+          !this.playPattern.channelPatterns.map(c => c.channelIdx).includes(idx)
+      );
+      orphanChannelsIdx.forEach(idx =>
+        this.playPattern.channelPatterns.push({
+          channelIdx: idx,
+          pattern: "0___"
+        })
+      );
+      this.playPatternId = randomHash(); // force update the component
     }
   },
   watch: {
@@ -210,6 +279,15 @@ export default {
       if (!this.isRendering && this.autoreplay) {
         this.isPlaying = true;
       }
+    },
+    watchPlayParams: {
+      deep: true,
+      handler() {
+        this.createSession();
+      }
+    },
+    channelsIdx() {
+      this.updatePlayPattern();
     }
   }
 };
@@ -223,5 +301,10 @@ export default {
 .column {
   float: left;
   width: 355;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 </style>
