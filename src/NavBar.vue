@@ -9,20 +9,21 @@
       </b-navbar-item>
     </template>
     <template slot="start">
-      <b-navbar-item tag="div">
+      <b-navbar-item>
         <b-field class="file">
           <b-upload size="is-small" v-model="file">
-            <a class="button is-small">
+            <div>
               <b-icon size="is-small" icon="upload"></b-icon>
               <span>Load JSON</span>
-            </a>
+            </div>
           </b-upload>
         </b-field>
       </b-navbar-item>
-      <b-navbar-item tag="div">
-        <b-button icon-left="download" size="is-small" @click="saveJson">
-          Save JSON
-        </b-button>
+      <b-navbar-item>
+        <div @click="saveJson">
+          <b-icon size="is-small" icon="download"></b-icon>
+          <span>Save JSON</span>
+        </div>
       </b-navbar-item>
     </template>
   </b-navbar>
