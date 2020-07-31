@@ -3,7 +3,7 @@
     key="play-pattern"
     :value="value"
     @input="v => $emit('input', v)"
-    height="100px"
+    height="260px"
   />
 </template>
 

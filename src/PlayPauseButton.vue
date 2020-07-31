@@ -1,12 +1,13 @@
 <template>
   <b-button
+    rounded
     size="is-small"
     :type="this.value ? 'is-dark' : 'is-success'"
     @click="toggle"
     :loading="this.rendering"
     outlined
+    :icon-left="this.value ? 'pause' : 'play'"
   >
-    <b-icon size="is-small" :icon="this.value ? 'pause' : 'play'" />
     {{ this.value ? "Pause" : "Play" }}
   </b-button>
 </template>

@@ -1,11 +1,17 @@
 <template lang="html">
   <div>
-    <b-select size="is-small" v-model="input.name">
-      <option v-for="n in names" :value="n">{{ n }} </option>
-    </b-select>
-    <b-button size="is-small" v-if="closeButton" @click="$emit('close', id)"
-      ><b-icon icon="close" size="is-small" /> Close</b-button
-    >
+    <div class="level">
+      <b-select size="is-small" v-model="input.name">
+        <option v-for="n in names" :value="n">{{ n }} </option>
+      </b-select>
+      <b-button
+        icon-left="close"
+        size="is-small"
+        v-if="closeButton"
+        @click="$emit('close', id)"
+        >Close</b-button
+      >
+    </div>
     <ParamsEditor
       :key="`instrument-editor-${id}`"
       v-model="input.params"
@@ -73,4 +79,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.level {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+</style>

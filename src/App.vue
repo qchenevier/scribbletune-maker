@@ -10,31 +10,54 @@
         </b-navbar-item>
       </template>
     </b-navbar>
-    <div class="columns">
+    <div class="columns container is-fluid main-space" style="overflow-x:auto">
       <div class="column is-narrow">
         <SaveLoadJson v-model="scribbletuneMakerSession" />
-        <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
-        <b-switch size="is-small" v-model="autoreplay">Autoreplay</b-switch>
-        <b-button size="is-small" @click="() => addChannel()"
-          ><b-icon icon="plus" size="is-small" />
-          Add channel
-        </b-button>
-      </div>
-      <div class="column is-narrow">
-        <div class="box">
-          <b-switch size="is-small" v-model="isPlayPattern">
-            Play {{ isPlayPattern ? "pattern" : "row" }}</b-switch
+        <div class="level">
+          <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
+          <b-button
+            rounded
+            icon-left="plus"
+            size="is-small"
+            @click="() => addChannel()"
           >
-          <input v-model="rowNumberToPlay" :disabled="isPlayPattern" />
-          <PlayPattern
-            v-if="isPlayPattern"
-            :key="playPatternId"
-            v-model="playPattern"
+            Add channel
+          </b-button>
+        </div>
+        <div class="level">
+          <b-switch size="is-small" v-model="autoreplay">Autoreplay</b-switch>
+        </div>
+        <div class="box">
+          <div class="level" style="margin-top:0;margin-bottom:0">
+            <div class="title is-6">
+              Play {{ isPlayPattern ? "pattern" : "row" }}
+            </div>
+            <div class="level" style="font-size:0.75rem">
+              Row &nbsp;
+              <b-switch
+                passive-type="is-primary"
+                size="is-small"
+                v-model="isPlayPattern"
+              >
+                Pattern</b-switch
+              >
+            </div>
+          </div>
+          <div class="subtitle is-6">
+            Row
+          </div>
+          <b-input
+            size="is-small"
+            :value="rowNumberToPlay"
+            @change.native="rowNumberToPlay = $event.target.value"
+            :disabled="isPlayPattern"
           />
+          <div class="subtitle is-6">
+            Pattern
+          </div>
+          <PlayPattern :key="playPatternId" v-model="playPattern" />
         </div>
       </div>
-    </div>
-    <div class="columns">
       <div class="column is-narrow" v-for="(channel, id) in channels">
         <Channel
           :key="`channel-${id}`"
@@ -311,4 +334,28 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+
+$box-padding: 0.75rem;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
+.level,
+.level:not(:last-child),
+.subtitle,
+.subtitle:not(:last-child),
+.title,
+.title:not(:last-child) {
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+.box {
+  //   padding: 0.75rem;
+  margin: 0.25rem;
+  width: 18.5rem;
+}
+</style>
