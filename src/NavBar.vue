@@ -1,5 +1,5 @@
 <template>
-  <b-navbar>
+  <b-navbar wrapper-class="container is-fluid">
     <template slot="brand">
       <b-navbar-item>
         <h1 class="title">Scribbletune Maker</h1>

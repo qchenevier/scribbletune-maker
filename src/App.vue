@@ -3,7 +3,7 @@
     <NavBar v-model="scribbletuneMakerSession" />
     <div class="columns container is-fluid main-space" style="overflow-x:auto">
       <div class="column is-narrow">
-        <div class="box">
+        <div class="box" style="box-shadow:unset">
           <div class="level">
             <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
             <b-button
