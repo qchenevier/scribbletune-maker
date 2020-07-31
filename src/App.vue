@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <SaveLoadJson v-model="scribbletuneMakerSession" />
+    <NavBar v-model="scribbletuneMakerSession" />
     <div class="columns container is-fluid main-space" style="overflow-x:auto">
       <div class="column is-narrow">
         <div class="box">
@@ -65,7 +65,7 @@
 import PlayPauseButton from "./PlayPauseButton.vue";
 import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
-import SaveLoadJson from "./SaveLoadJson.vue";
+import NavBar from "./NavBar.vue";
 import PlayPattern from "./PlayPattern.vue";
 
 function randomHash() {
@@ -83,7 +83,7 @@ export default {
   components: {
     PlayPauseButton,
     Channel,
-    SaveLoadJson,
+    NavBar,
     PlayPattern
   },
   data() {
