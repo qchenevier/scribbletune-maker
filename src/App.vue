@@ -1,31 +1,23 @@
 <template>
   <div id="app">
-    <b-navbar>
-      <template slot="brand">
-        <b-navbar-item>
-          <h1 class="title">Scribbletune Maker</h1>
-        </b-navbar-item>
-        <b-navbar-item>
-          <Oscilloscope />
-        </b-navbar-item>
-      </template>
-    </b-navbar>
+    <SaveLoadJson v-model="scribbletuneMakerSession" />
     <div class="columns container is-fluid main-space" style="overflow-x:auto">
       <div class="column is-narrow">
-        <SaveLoadJson v-model="scribbletuneMakerSession" />
-        <div class="level">
-          <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
-          <b-button
-            rounded
-            icon-left="plus"
-            size="is-small"
-            @click="() => addChannel()"
-          >
-            Add channel
-          </b-button>
-        </div>
-        <div class="level">
-          <b-switch size="is-small" v-model="autoreplay">Autoreplay</b-switch>
+        <div class="box">
+          <div class="level">
+            <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
+            <b-button
+              rounded
+              icon-left="plus"
+              size="is-small"
+              @click="() => addChannel()"
+            >
+              Add channel
+            </b-button>
+          </div>
+          <div class="level">
+            <b-switch size="is-small" v-model="autoreplay">Autoreplay</b-switch>
+          </div>
         </div>
         <div class="box">
           <div class="level" style="margin-top:0;margin-bottom:0">
@@ -73,7 +65,6 @@
 import PlayPauseButton from "./PlayPauseButton.vue";
 import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
-import Oscilloscope from "./Oscilloscope.vue";
 import SaveLoadJson from "./SaveLoadJson.vue";
 import PlayPattern from "./PlayPattern.vue";
 
@@ -92,7 +83,6 @@ export default {
   components: {
     PlayPauseButton,
     Channel,
-    Oscilloscope,
     SaveLoadJson,
     PlayPattern
   },

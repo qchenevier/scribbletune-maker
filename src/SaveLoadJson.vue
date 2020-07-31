@@ -1,38 +1,41 @@
 <template>
-  <div>
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <b-field class="file">
-            <b-upload size="is-small" v-model="file">
-              <a class="button is-small">
-                <b-icon size="is-small" icon="upload"></b-icon>
-                <span>Load JSON</span>
-              </a>
-            </b-upload>
-          </b-field>
-        </div>
-      </div>
-      <div class="level-right">
-        <div class="level-item">
-          <b-button
-            rounded
-            icon-left="download"
-            size="is-small"
-            @click="saveJson"
-          >
-            Save JSON
-          </b-button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <b-navbar>
+    <template slot="brand">
+      <b-navbar-item>
+        <h1 class="title">Scribbletune Maker</h1>
+      </b-navbar-item>
+      <b-navbar-item>
+        <Oscilloscope />
+      </b-navbar-item>
+    </template>
+    <template slot="start">
+      <b-navbar-item tag="div">
+        <b-field class="file">
+          <b-upload size="is-small" v-model="file">
+            <a class="button is-small">
+              <b-icon size="is-small" icon="upload"></b-icon>
+              <span>Load JSON</span>
+            </a>
+          </b-upload>
+        </b-field>
+      </b-navbar-item>
+      <b-navbar-item tag="div">
+        <b-button icon-left="download" size="is-small" @click="saveJson">
+          Save JSON
+        </b-button>
+      </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
 
 <script>
+import Oscilloscope from "./Oscilloscope.vue";
 import { saveAs } from "file-saver";
 
 export default {
+  components: {
+    Oscilloscope
+  },
   props: ["value"],
   data() {
     return { file: undefined };
