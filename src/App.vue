@@ -1,44 +1,53 @@
 <template>
   <div id="app">
+    <KeyPress
+      key-event="keydown"
+      :key-code="32"
+      :modifiers="['shiftKey']"
+      @success="
+        () => {
+          this.isPlaying = !this.isPlaying;
+        }
+      "
+    />
     <NavBar v-model="scribbletuneMakerSession" />
+    <div class="level">
+      <div class="level-left container is-fluid">
+        <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
+        <b-button
+          rounded
+          size="is-small"
+          :type="this.autoreplay ? 'is-link' : ''"
+          @click="
+            () => {
+              this.autoreplay = !this.autoreplay;
+            }
+          "
+          outlined
+          icon-left="step-forward"
+        />
+        <b-button
+          rounded
+          icon-left="plus"
+          size="is-small"
+          @click="() => addChannel()"
+        >
+          Add channel
+        </b-button>
+      </div>
+    </div>
     <div class="columns container is-fluid main-space" style="overflow-x:auto">
-      <div class="column is-narrow">
-        <div class="box" style="box-shadow:unset;margin-bottom:unset">
-          <div class="level">
-            <div class="level-left">
-              <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
-              <b-button
-                rounded
-                size="is-small"
-                :type="this.autoreplay ? 'is-link' : ''"
-                @click="
-                  () => {
-                    this.autoreplay = !this.autoreplay;
-                  }
-                "
-                outlined
-                icon-left="autorenew"
-              />
-            </div>
-            <b-button
-              rounded
-              icon-left="plus"
-              size="is-small"
-              @click="() => addChannel()"
-            >
-              Add channel
-            </b-button>
-          </div>
-        </div>
-        <div class="box">
+      <div class="column is-narrow" style="padding-left:1px">
+        <div class="box" style="margin-left:0px">
           <div class="level" style="margin-top:0;margin-bottom:0">
             <div class="title is-6">
-              Play {{ isPlayPattern ? "pattern" : "row" }}
+              Play {{ isPlayPattern ? "pattern" : "clip" }}
             </div>
             <div class="level" style="font-size:0.75rem">
-              Row &nbsp;
+              Clip &nbsp;
               <b-switch
-                passive-type="is-primary"
+                type="is-link"
+                passive-type="is-link"
                 size="is-small"
                 v-model="isPlayPattern"
               >
@@ -47,7 +56,7 @@
             </div>
           </div>
           <div class="subtitle is-6">
-            Row
+            Clip
           </div>
           <b-input
             size="is-small"
@@ -78,6 +87,7 @@ import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
 import NavBar from "./NavBar.vue";
 import PlayPattern from "./PlayPattern.vue";
+import KeyPress from "vue-keypress";
 
 function randomHash() {
   return Math.floor(Math.random() * 0xffffff)
@@ -95,7 +105,8 @@ export default {
     PlayPauseButton,
     Channel,
     NavBar,
-    PlayPattern
+    PlayPattern,
+    KeyPress
   },
   data() {
     return {
@@ -338,12 +349,11 @@ export default {
 </script>
 
 <style lang="scss">
-// Import Bulma's core
+// see https://buefy.org/documentation/customization/
 @import "~bulma/sass/utilities/_all";
 
 $box-padding: 0.75rem;
 
-// Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 
@@ -357,7 +367,6 @@ $box-padding: 0.75rem;
   margin-top: 0.5rem;
 }
 .box {
-  //   padding: 0.75rem;
   margin: 0.25rem;
   width: 18.5rem;
 }

@@ -14,7 +14,7 @@
         <b-button
           rounded
           size="is-small"
-          :type="this.input.isActive ? '' : 'is-warning'"
+          :type="this.input.isActive ? '' : 'is-link'"
           @click="
             () => {
               this.input.isActive = !this.input.isActive;
@@ -26,14 +26,14 @@
         <b-button
           rounded
           size="is-small"
-          :type="this.input.offlineRendering ? 'is-info' : ''"
+          :type="this.input.offlineRendering ? 'is-link' : ''"
           @click="
             () => {
               this.input.offlineRendering = !this.input.offlineRendering;
             }
           "
           outlined
-          icon-left="auto-fix"
+          icon-left="rocket-launch"
         />
         <b-button
           rounded
@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import randomEmoji from "random-emoji";
+
 import Instrument from "./Instrument.vue";
 import Clip from "./Clip.vue";
 
@@ -143,7 +145,7 @@ export default {
     };
   },
   created() {
-    this.input.idx = this.value.idx || this.id;
+    this.input.idx = this.value.idx || this.getRandomIdx();
   },
   computed: {
     id() {
@@ -157,6 +159,14 @@ export default {
     },
     removeEffect(id) {
       this.$delete(this.input.effects, id);
+    },
+    getRandomIdx() {
+      const emoji = randomEmoji.random({ count: 1 })[0];
+      const emojiNameTitleCase = emoji.name
+        .split("_")
+        .map(w => w[0].toUpperCase() + w.substr(1).toLowerCase())
+        .join(" ");
+      return `${emoji.character} ${emojiNameTitleCase}`;
     }
   },
   watch: {

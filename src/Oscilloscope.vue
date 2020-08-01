@@ -34,7 +34,7 @@ export default {
 
       // spectrum
       sketch.noStroke();
-      sketch.fill("rgba(0, 100, 255, 0.3)");
+      sketch.fill("rgba(50, 115, 220, 0.6)");
       sketch.beginShape();
       sketch.vertex(0, height);
       for (let i = 0; i < spectrum.length; i++) {
@@ -48,7 +48,7 @@ export default {
 
       // waveform
       sketch.noFill();
-      sketch.stroke("rgba(0, 100, 255, 0.7)");
+      sketch.stroke("rgba(50, 115, 220, 1)");
       sketch.strokeWeight(1.5);
       sketch.beginShape();
       let trigger = 0;

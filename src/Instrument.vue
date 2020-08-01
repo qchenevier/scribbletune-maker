@@ -5,12 +5,12 @@
         <option v-for="n in names" :value="n">{{ n }} </option>
       </b-select>
       <b-button
+        rounded
         icon-left="close"
         size="is-small"
         v-if="closeButton"
         @click="$emit('close', id)"
-        >Close</b-button
-      >
+      />
     </div>
     <ParamsEditor
       :key="`instrument-editor-${id}`"

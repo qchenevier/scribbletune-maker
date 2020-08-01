@@ -1,13 +1,14 @@
 <template>
-  <b-button
-    rounded
-    size="is-small"
-    :type="this.value ? 'is-dark' : 'is-success'"
-    @click="toggle"
-    :loading="this.rendering"
-    outlined
-    :icon-left="this.value ? 'pause' : 'play'"
-  />
+  <div>
+    <b-button
+      rounded
+      size="is-small"
+      :type="this.value ? 'is-dark' : 'is-link'"
+      @click="toggle"
+      :loading="this.rendering"
+      :icon-left="this.value ? 'pause' : 'play'"
+    />
+  </div>
 </template>
 
 <script>

@@ -4,7 +4,7 @@
       :ref="`editor-${id}`"
       :key="`editor-${id}`"
       v-model="input"
-      @focus="background = '#0064FF0C'"
+      @focus="background = '#3273DC0C'"
       @blur="
         $emit('input', YAML.parse(input));
         background = '#FFFFFF';
@@ -19,6 +19,8 @@
 <script>
 import { codemirror } from "vue-codemirror";
 import "codemirror/lib/codemirror.css";
+import "codemirror/addon/scroll/simplescrollbars.css";
+import "codemirror/addon/scroll/simplescrollbars";
 import "codemirror/mode/yaml/yaml";
 
 import YAML from "yaml";
@@ -34,7 +36,8 @@ export default {
           tabSize: 2,
           mode: "text/yaml",
           dragDrop: false,
-          line: true
+          line: true,
+          scrollbarStyle: "overlay"
         };
       }
     },
@@ -113,8 +116,29 @@ export default {
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
 }
 
+/deep/ .cm-s-default .cm-atom {
+  color: rgba(50, 115, 220, 1);
+}
+
 /deep/ .highlighted {
   font-weight: bold;
-  background-color: rgba(0, 100, 255, 0.2);
+  background-color: rgba(50, 115, 220, 0.2);
+}
+
+/deep/ .CodeMirror-overlayscroll-horizontal div {
+  background: rgba(50, 115, 220, 0.8);
+  border-radius: 1.5px;
+}
+/deep/ .CodeMirror-overlayscroll-vertical div {
+  background: rgba(50, 115, 220, 0.8);
+  border-radius: 1.5px;
+}
+
+/deep/ .CodeMirror-overlayscroll-horizontal {
+  height: 3px;
+}
+
+/deep/ .CodeMirror-overlayscroll-vertical {
+  width: 3px;
 }
 </style>

@@ -32,9 +32,11 @@
     "diff": "^4.0.2",
     "file-saver": "^2.0.2",
     "node-sass": "^4.14.1",
+    "random-emoji": "^1.0.2",
     "sass-loader": "^9.0.2",
     "scribbletune": "github:qchenevier/scribbletune#play-pattern",
     "vue-codemirror": "^4.0.6",
+    "vue-keypress": "^2.1.1",
     "vue-p5": "^0.8.3",
     "yaml": "^1.10.0"
   }
