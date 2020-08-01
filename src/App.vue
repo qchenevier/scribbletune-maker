@@ -112,15 +112,15 @@ export default {
           playPattern: this.playPattern
         };
       },
-      set(loadedScribbltuneMakerSession) {
+      set(loadedScribbletuneMakerSession) {
         this.channels = {};
-        loadedScribbltuneMakerSession.channels.forEach(this.addChannel);
-        this.playPattern = loadedScribbltuneMakerSession.playPattern;
+        loadedScribbletuneMakerSession.channels.forEach(this.addChannel);
+        this.playPattern = loadedScribbletuneMakerSession.playPattern;
       }
     },
     watchPropsForSessionRebuild() {
       return Object.values(this.channels)
-        .filter(c => c)
+        .filter(c => c?.isActive)
         .map(c => {
           return {
             instrumentName: c?.instrument?.name,
@@ -241,7 +241,9 @@ export default {
       this.session = new scribble.Session();
       this.toneInstruments = {};
       this.toneEffects = {};
-      Object.entries(this.channels).forEach(this.createChannel);
+      Object.entries(this.channels)
+        .filter(([id, channel]) => channel?.isActive)
+        .forEach(this.createChannel);
       this.createToneTransport();
     },
     updateToneInstrumentsParams() {

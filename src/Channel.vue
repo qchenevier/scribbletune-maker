@@ -18,18 +18,8 @@
       />
     </div>
     <div class="level">
-      <b-button
-        rounded
-        icon-left="auto-fix"
-        size="is-small"
-        @click="() => addEffect()"
-      >
-        Add effect
-      </b-button>
-      <b-switch
-        size="is-small"
-        v-model="input.offlineRendering"
-        style="margin-left:0.75rem"
+      <b-switch size="is-small" v-model="input.isActive">Active</b-switch>
+      <b-switch size="is-small" v-model="input.offlineRendering"
         >Prerender</b-switch
       >
     </div>
@@ -43,6 +33,16 @@
       :names="instrumentNames"
       v-model="input.instrument"
     />
+    <div class="level">
+      <b-button
+        rounded
+        icon-left="auto-fix"
+        size="is-small"
+        @click="() => addEffect()"
+      >
+        Add effect
+      </b-button>
+    </div>
     <div v-if="Object.values(input.effects).length">
       <div v-if="Object.values(input.effects).length" class="subtitle is-6">
         Effects
@@ -80,7 +80,8 @@ export default {
           instrument: undefined,
           effects: {},
           offlineRendering: false,
-          idx: undefined
+          idx: undefined,
+          isActive: true
         };
       }
     }
