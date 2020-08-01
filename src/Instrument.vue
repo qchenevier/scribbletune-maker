@@ -56,8 +56,8 @@ export default {
         name: this.names[0],
         params: new Tone[this.names[0]]().get()
       };
-      this.defaultValue = this.input.params;
     }
+    this.defaultValue = new Tone[this.input.name]().get();
   },
   mounted() {
     this.$emit("input", this.input);
