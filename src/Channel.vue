@@ -7,21 +7,51 @@
         size="is-small"
         :value="input.idx"
         @change.native="input.idx = $event.target.value"
-        style="margin-left:0.75rem; width:9rem"
-      />
-      <b-button
+        style="margin-left:0.75rem; width:6rem"
         rounded
-        icon-left="close"
-        type="is-text"
-        size="is-small"
-        @click="$emit('close', id)"
       />
+      <div class="level-right">
+        <b-button
+          rounded
+          size="is-small"
+          :type="this.input.isActive ? '' : 'is-warning'"
+          @click="
+            () => {
+              this.input.isActive = !this.input.isActive;
+            }
+          "
+          outlined
+          :icon-left="this.input.isActive ? 'pause' : 'play'"
+        />
+        <b-button
+          rounded
+          size="is-small"
+          :type="this.input.offlineRendering ? 'is-info' : ''"
+          @click="
+            () => {
+              this.input.offlineRendering = !this.input.offlineRendering;
+            }
+          "
+          outlined
+          icon-left="auto-fix"
+        />
+        <b-button
+          rounded
+          icon-left="close"
+          size="is-small"
+          @click="$emit('close', id)"
+        />
+      </div>
     </div>
     <div class="level">
-      <b-switch size="is-small" v-model="input.isActive">Active</b-switch>
-      <b-switch size="is-small" v-model="input.offlineRendering"
-        >Prerender</b-switch
+      <b-button
+        rounded
+        icon-left="creation"
+        size="is-small"
+        @click="() => addEffect()"
       >
+        Add effect
+      </b-button>
     </div>
     <div class="subtitle is-6">
       Clips
@@ -33,16 +63,6 @@
       :names="instrumentNames"
       v-model="input.instrument"
     />
-    <div class="level">
-      <b-button
-        rounded
-        icon-left="auto-fix"
-        size="is-small"
-        @click="() => addEffect()"
-      >
-        Add effect
-      </b-button>
-    </div>
     <div v-if="Object.values(input.effects).length">
       <div v-if="Object.values(input.effects).length" class="subtitle is-6">
         Effects

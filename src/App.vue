@@ -3,9 +3,23 @@
     <NavBar v-model="scribbletuneMakerSession" />
     <div class="columns container is-fluid main-space" style="overflow-x:auto">
       <div class="column is-narrow">
-        <div class="box" style="box-shadow:unset">
+        <div class="box" style="box-shadow:unset;margin-bottom:unset">
           <div class="level">
-            <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
+            <div class="level-left">
+              <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
+              <b-button
+                rounded
+                size="is-small"
+                :type="this.autoreplay ? 'is-link' : ''"
+                @click="
+                  () => {
+                    this.autoreplay = !this.autoreplay;
+                  }
+                "
+                outlined
+                icon-left="autorenew"
+              />
+            </div>
             <b-button
               rounded
               icon-left="plus"
@@ -14,9 +28,6 @@
             >
               Add channel
             </b-button>
-          </div>
-          <div class="level">
-            <b-switch size="is-small" v-model="autoreplay">Autoreplay</b-switch>
           </div>
         </div>
         <div class="box">
@@ -349,5 +360,10 @@ $box-padding: 0.75rem;
   //   padding: 0.75rem;
   margin: 0.25rem;
   width: 18.5rem;
+}
+.button.is-rounded {
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  margin-right: 0.25em;
 }
 </style>

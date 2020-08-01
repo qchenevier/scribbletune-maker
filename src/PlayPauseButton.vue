@@ -7,9 +7,7 @@
     :loading="this.rendering"
     outlined
     :icon-left="this.value ? 'pause' : 'play'"
-  >
-    {{ this.value ? "Pause" : "Play" }}
-  </b-button>
+  />
 </template>
 
 <script>
