@@ -7,7 +7,7 @@
         size="is-small"
         :value="input.idx"
         @change.native="input.idx = $event.target.value"
-        style="margin-left:0.75rem"
+        style="margin-left:0.75rem; width:9rem"
       />
       <b-button
         rounded
