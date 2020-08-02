@@ -4,13 +4,6 @@
       <div class="level" style="margin-top:0;margin-bottom:0">
         <!-- lazy input change for buefy component https://github.com/buefy/buefy/issues/401 -->
         <div class="title is-6">Channel</div>
-        <b-input
-          size="is-small"
-          :value="input.idx"
-          @change.native="$set(input, 'idx', $event.target.value)"
-          style="margin-left:0.75rem; width:6rem"
-          rounded
-        />
         <div class="level-right">
           <b-button
             rounded
@@ -33,15 +26,23 @@
             icon-left="close"
             size="is-small"
             @click="$emit('close', id)"
+            style="margin-right:unset"
           />
         </div>
       </div>
       <div class="level">
+        <b-input
+          size="is-small"
+          :value="input.idx"
+          @change.native="$set(input, 'idx', $event.target.value)"
+          rounded
+        />
         <b-button
           rounded
           icon-left="creation"
           size="is-small"
           @click="addEffect"
+          style="margin-left:0.5em; margin-right:unset"
         >
           Add effect
         </b-button>
@@ -75,7 +76,8 @@
 </template>
 
 <script>
-import randomEmoji from "random-emoji";
+import animals from "./animals.json";
+import superbs from "./superbs.json";
 
 import Instrument from "./Instrument.vue";
 import Clip from "./Clip.vue";
@@ -135,7 +137,9 @@ export default {
         "StereoWidener",
         "Tremolo",
         "Vibrato"
-      ]
+      ],
+      animals,
+      superbs
     };
   },
   created() {
@@ -155,12 +159,28 @@ export default {
       this.$delete(this.input.effects, id);
     },
     getRandomIdx() {
-      const emoji = randomEmoji.random({ count: 1 })[0];
-      const emojiNameTitleCase = emoji.name
-        .split("_")
+      const shortAnimals = animals
+        .filter(a => {
+          return a.name.split(" ").length == 1;
+        })
+        .filter(a => {
+          return a.name.length <= 6;
+        });
+      const shortSuperbs = superbs
+        .filter(a => {
+          return a.split(" ").length == 1;
+        })
+        .filter(a => {
+          return a.length <= 6;
+        });
+      const animal =
+        shortAnimals[Math.floor(Math.random() * shortAnimals.length)];
+      const superb =
+        shortSuperbs[Math.floor(Math.random() * shortSuperbs.length)];
+      return `${animal.emoji} ${superb} ${animal.name}`
+        .split(" ")
         .map(w => w[0].toUpperCase() + w.substr(1).toLowerCase())
         .join(" ");
-      return `${emoji.character} ${emojiNameTitleCase}`;
     }
   },
   watch: {
