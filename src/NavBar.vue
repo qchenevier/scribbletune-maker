@@ -14,7 +14,7 @@
           <b-upload size="is-small" v-model="file">
             <div>
               <b-icon size="is-small" icon="upload"></b-icon>
-              <span>Load JSON</span>
+              <span>Load</span>
             </div>
           </b-upload>
         </b-field>
@@ -22,13 +22,13 @@
       <b-navbar-item>
         <div @click="saveJson">
           <b-icon size="is-small" icon="download"></b-icon>
-          <span>Save JSON</span>
+          <span>Save</span>
         </div>
       </b-navbar-item>
       <b-navbar-item>
         <div @click="getLink">
-          <b-icon size="is-small" icon="link"></b-icon>
-          <span>Share with link</span>
+          <b-icon size="is-small" icon="share-variant"></b-icon>
+          <span>Share</span>
         </div>
       </b-navbar-item>
     </template>
