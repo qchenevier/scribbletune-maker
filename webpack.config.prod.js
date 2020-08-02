@@ -3,9 +3,6 @@ const mainConfig = require("./webpack.config.js");
 
 module.exports = merge(mainConfig, {
   mode: "production",
-  router: {
-    base: "/scribbletune-maker/"
-  },
   optimization: {
     splitChunks: {
       cacheGroups: {
