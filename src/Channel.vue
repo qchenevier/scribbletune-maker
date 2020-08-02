@@ -1,81 +1,83 @@
 <template lang="html">
-  <div class="box is-6">
-    <div class="level" style="margin-top:0;margin-bottom:0">
-      <!-- lazy input change for buefy component https://github.com/buefy/buefy/issues/401 -->
-      <div class="title is-6">Channel</div>
-      <b-input
-        size="is-small"
-        :value="input.idx"
-        @change.native="input.idx = $event.target.value"
-        style="margin-left:0.75rem; width:6rem"
-        rounded
-      />
-      <div class="level-right">
-        <b-button
-          rounded
+  <div class="column is-narrow">
+    <div class="box is-6">
+      <div class="level" style="margin-top:0;margin-bottom:0">
+        <!-- lazy input change for buefy component https://github.com/buefy/buefy/issues/401 -->
+        <div class="title is-6">Channel</div>
+        <b-input
           size="is-small"
-          :type="this.input.isActive ? '' : 'is-link'"
-          @click="
-            () => {
-              this.input.isActive = !this.input.isActive;
-            }
-          "
-          outlined
-          :icon-left="this.input.isActive ? 'pause' : 'play'"
-        />
-        <b-button
+          :value="input.idx"
+          @change.native="input.idx = $event.target.value"
+          style="margin-left:0.75rem; width:6rem"
           rounded
-          size="is-small"
-          :type="this.input.offlineRendering ? 'is-link' : ''"
-          @click="
-            () => {
-              this.input.offlineRendering = !this.input.offlineRendering;
-            }
-          "
-          outlined
-          icon-left="rocket-launch"
         />
-        <b-button
-          rounded
-          icon-left="close"
-          size="is-small"
-          @click="$emit('close', id)"
-        />
+        <div class="level-right">
+          <b-button
+            rounded
+            size="is-small"
+            :type="this.input.isActive ? '' : 'is-link'"
+            @click="
+              () => {
+                this.input.isActive = !this.input.isActive;
+              }
+            "
+            outlined
+            :icon-left="this.input.isActive ? 'pause' : 'play'"
+          />
+          <b-button
+            rounded
+            size="is-small"
+            :type="this.input.offlineRendering ? 'is-link' : ''"
+            @click="
+              () => {
+                this.input.offlineRendering = !this.input.offlineRendering;
+              }
+            "
+            outlined
+            icon-left="rocket-launch"
+          />
+          <b-button
+            rounded
+            icon-left="close"
+            size="is-small"
+            @click="$emit('close', id)"
+          />
+        </div>
       </div>
-    </div>
-    <div class="level">
-      <b-button
-        rounded
-        icon-left="creation"
-        size="is-small"
-        @click="() => addEffect()"
-      >
-        Add effect
-      </b-button>
-    </div>
-    <div class="subtitle is-6">
-      Clips
-    </div>
-    <Clip :key="`clip-${id}`" v-model="input.clips" />
-    <div class="subtitle is-6">Instrument</div>
-    <Instrument
-      :key="`instrument-${id}`"
-      :names="instrumentNames"
-      v-model="input.instrument"
-    />
-    <div v-if="Object.values(input.effects).length">
-      <div v-if="Object.values(input.effects).length" class="subtitle is-6">
-        Effects
+      <div class="level">
+        <b-button
+          rounded
+          icon-left="creation"
+          size="is-small"
+          @click="() => addEffect()"
+        >
+          Add effect
+        </b-button>
       </div>
+      <div class="subtitle is-6">
+        Clips
+      </div>
+      <Clip :key="`clip-${id}`" v-model="input.clips" />
+      <div class="subtitle is-6">Instrument</div>
       <Instrument
-        v-for="(effect, idEffect) in input.effects"
-        :key="`effect-${idEffect}`"
-        :names="effectNames"
-        v-model="input.effects[idEffect]"
-        :closeButton="true"
-        @close="removeEffect"
-        height="100px"
+        :key="`instrument-${id}`"
+        :names="instrumentNames"
+        v-model="input.instrument"
       />
+      <div v-if="Object.values(input.effects).length">
+        <div v-if="Object.values(input.effects).length" class="subtitle is-6">
+          Effects
+        </div>
+        <Instrument
+          v-for="(effect, idEffect) in input.effects"
+          :key="`effect-${idEffect}`"
+          :names="effectNames"
+          v-model="input.effects[idEffect]"
+          :closeButton="true"
+          @close="removeEffect"
+          height="100px"
+        />
+      </div>
     </div>
   </div>
 </template>

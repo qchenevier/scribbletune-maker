@@ -10,89 +10,19 @@
       @addChannel="addChannel"
     />
 
-    <div class="columns container is-fluid main-space" style="overflow-x:auto">
-      <div class="column is-narrow" style="padding-left:1px">
-        <div class="box" style="margin-left:0px">
-          <div class="level" style="margin-top:0;margin-bottom:0">
-            <div class="title is-6">
-              Play {{ isPlayPattern ? "pattern" : "clip" }}
-            </div>
-            <div class="level" style="font-size:0.75rem">
-              Clip &nbsp;
-              <b-switch
-                type="is-link"
-                passive-type="is-link"
-                size="is-small"
-                v-model="isPlayPattern"
-              >
-                Pattern</b-switch
-              >
-            </div>
-          </div>
-
-          <b-collapse
-            class="div"
-            animation="slide"
-            :open="isPlayPattern"
-            :style="!isPlayPattern ? 'text-decoration: line-through' : ''"
-            @open="isPlayPattern = true"
-            @close="isPlayPattern = false"
-          >
-            <div
-              slot="trigger"
-              slot-scope="props"
-              role="button"
-              class="subtitle is-6"
-            >
-              Pattern
-              <b-icon
-                size="is-small"
-                :icon="props.open ? 'menu-down' : 'menu-up'"
-              >
-              </b-icon>
-            </div>
-            <PlayPattern :key="playPatternId" v-model="playPattern" />
-          </b-collapse>
-
-          <b-collapse
-            class="div"
-            animation="slide"
-            :open="!isPlayPattern"
-            :style="isPlayPattern ? 'text-decoration: line-through' : ''"
-            @open="isPlayPattern = false"
-            @close="isPlayPattern = true"
-          >
-            <div
-              slot="trigger"
-              slot-scope="props"
-              role="button"
-              class="subtitle is-6"
-              style=""
-            >
-              Clip
-              <b-icon
-                size="is-small"
-                :icon="props.open ? 'menu-down' : 'menu-up'"
-              >
-              </b-icon>
-            </div>
-            <b-input
-              size="is-small"
-              :value="rowNumberToPlay"
-              @change.native="rowNumberToPlay = $event.target.value"
-              :disabled="isPlayPattern"
-            />
-          </b-collapse>
-        </div>
-      </div>
-
-      <div class="column is-narrow" v-for="(channel, id) in channels">
-        <Channel
-          :key="`channel-${id}`"
-          v-model="channels[id]"
-          @close="removeChannel"
-        />
-      </div>
+    <div class="columns container is-fluid" style="overflow-x:auto">
+      <PlayPattern
+        :isPlayPattern="isPlayPattern"
+        :playPattern="playPattern"
+        :rowNumberToPlay="rowNumberToPlay"
+        @toggleVariable="toggleVariable"
+      />
+      <Channel
+        v-for="(channel, id) in channels"
+        :key="`channel-${id}`"
+        v-model="channels[id]"
+        @close="removeChannel"
+      />
     </div>
   </div>
 </template>
