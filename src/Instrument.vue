@@ -51,12 +51,10 @@ export default {
     }
   },
   created() {
-    if (!this.input) {
-      this.input = {
-        name: this.names[0],
-        params: new Tone[this.names[0]]().get()
-      };
-    }
+    this.input = {
+      name: this.input?.name || this.names[0],
+      params: this.input?.params || new Tone[this.names[0]]().get()
+    };
     this.defaultValue = new Tone[this.input.name]().get();
   },
   mounted() {

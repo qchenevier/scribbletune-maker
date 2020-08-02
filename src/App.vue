@@ -14,6 +14,7 @@
       <PlayPattern
         :isPlayPattern="isPlayPattern"
         :playPattern="playPattern"
+        :playPatternId="playPatternId"
         :rowNumberToPlay="rowNumberToPlay"
         @toggleVariable="toggleVariable"
       />
@@ -89,9 +90,6 @@ export default {
     playPattern: {
       get() {
         return this.playPatternValue || this.playPatternDefault;
-      },
-      set(value) {
-        this.playPatternValue = value;
       }
     },
     watchPropsForSessionRebuild() {
@@ -185,6 +183,7 @@ export default {
       }
       let effects = channel?.effects
         ? Object.entries(channel.effects)
+            .filter(([idEffect, effect]) => effect.name)
             .map(([idEffect, effect]) =>
               effect
                 ? createEffect.bind(this)(effect.name, `${id}-${idEffect}`)
@@ -248,19 +247,22 @@ export default {
       });
     },
     updatePlayPattern() {
+      this.playPatternValue = this.playPatternValue || this.playPatternDefault;
       this.$set(
-        this.playPattern,
+        this.playPatternValue,
         "channelPatterns",
-        this.playPattern.channelPatterns.filter(c =>
+        this.playPatternValue.channelPatterns?.filter(c =>
           this.channelsIdx.includes(c.channelIdx)
         )
       );
       const orphanChannelsIdx = this.channelsIdx.filter(
         idx =>
-          !this.playPattern.channelPatterns.map(c => c.channelIdx).includes(idx)
+          !this.playPatternValue.channelPatterns
+            .map(c => c.channelIdx)
+            .includes(idx)
       );
       orphanChannelsIdx.forEach(idx =>
-        this.playPattern.channelPatterns.push({
+        this.playPatternValue.channelPatterns.push({
           channelIdx: idx,
           pattern: "0___"
         })

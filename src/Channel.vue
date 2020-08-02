@@ -7,7 +7,7 @@
         <b-input
           size="is-small"
           :value="input.idx"
-          @change.native="input.idx = $event.target.value"
+          @change.native="$set(input, 'idx', $event.target.value)"
           style="margin-left:0.75rem; width:6rem"
           rounded
         />
@@ -15,24 +15,16 @@
           <b-button
             rounded
             size="is-small"
-            :type="this.input.isActive ? '' : 'is-link'"
-            @click="
-              () => {
-                this.input.isActive = !this.input.isActive;
-              }
-            "
+            :type="input.isActive ? '' : 'is-link'"
+            @click="$set(input, 'isActive', !input.isActive)"
             outlined
-            :icon-left="this.input.isActive ? 'pause' : 'play'"
+            :icon-left="input.isActive ? 'pause' : 'play'"
           />
           <b-button
             rounded
             size="is-small"
-            :type="this.input.offlineRendering ? 'is-link' : ''"
-            @click="
-              () => {
-                this.input.offlineRendering = !this.input.offlineRendering;
-              }
-            "
+            :type="input.offlineRendering ? 'is-link' : ''"
+            @click="$set(input, 'offlineRendering', !input.offlineRendering)"
             outlined
             icon-left="rocket-launch"
           />
@@ -49,7 +41,7 @@
           rounded
           icon-left="creation"
           size="is-small"
-          @click="() => addEffect()"
+          @click="addEffect"
         >
           Add effect
         </b-button>

@@ -38,7 +38,7 @@
           </b-icon>
         </div>
         <ParamsEditor
-          key="playPatternId"
+          :key="playPatternId"
           :value="playPattern"
           @input="v => $emit('playPattern', v)"
           height="260px"
@@ -83,6 +83,7 @@ export default {
   props: {
     isPlayPattern: { default: true },
     playPattern: { default: "" },
+    playPatternId: { default: 0 },
     rowNumberToPlay: { default: 0 }
   }
 };
