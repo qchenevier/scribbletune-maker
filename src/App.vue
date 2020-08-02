@@ -10,7 +10,9 @@
         }
       "
     />
+
     <NavBar v-model="scribbletuneMakerSession" />
+
     <div class="level">
       <div class="level-left container is-fluid">
         <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
@@ -36,6 +38,7 @@
         </b-button>
       </div>
     </div>
+
     <div class="columns container is-fluid main-space" style="overflow-x:auto">
       <div class="column is-narrow" style="padding-left:1px">
         <div class="box" style="margin-left:0px">
@@ -55,21 +58,63 @@
               >
             </div>
           </div>
-          <div class="subtitle is-6">
-            Clip
-          </div>
-          <b-input
-            size="is-small"
-            :value="rowNumberToPlay"
-            @change.native="rowNumberToPlay = $event.target.value"
-            :disabled="isPlayPattern"
-          />
-          <div class="subtitle is-6">
-            Pattern
-          </div>
-          <PlayPattern :key="playPatternId" v-model="playPattern" />
+
+          <b-collapse
+            class="div"
+            animation="slide"
+            :open="isPlayPattern"
+            :style="!isPlayPattern ? 'text-decoration: line-through' : ''"
+            @open="isPlayPattern = true"
+            @close="isPlayPattern = false"
+          >
+            <div
+              slot="trigger"
+              slot-scope="props"
+              role="button"
+              class="subtitle is-6"
+            >
+              Pattern
+              <b-icon
+                size="is-small"
+                :icon="props.open ? 'menu-down' : 'menu-up'"
+              >
+              </b-icon>
+            </div>
+            <PlayPattern :key="playPatternId" v-model="playPattern" />
+          </b-collapse>
+
+          <b-collapse
+            class="div"
+            animation="slide"
+            :open="!isPlayPattern"
+            :style="isPlayPattern ? 'text-decoration: line-through' : ''"
+            @open="isPlayPattern = false"
+            @close="isPlayPattern = true"
+          >
+            <div
+              slot="trigger"
+              slot-scope="props"
+              role="button"
+              class="subtitle is-6"
+              style=""
+            >
+              Clip
+              <b-icon
+                size="is-small"
+                :icon="props.open ? 'menu-down' : 'menu-up'"
+              >
+              </b-icon>
+            </div>
+            <b-input
+              size="is-small"
+              :value="rowNumberToPlay"
+              @change.native="rowNumberToPlay = $event.target.value"
+              :disabled="isPlayPattern"
+            />
+          </b-collapse>
         </div>
       </div>
+
       <div class="column is-narrow" v-for="(channel, id) in channels">
         <Channel
           :key="`channel-${id}`"
