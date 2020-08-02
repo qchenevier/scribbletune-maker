@@ -115,15 +115,16 @@ export default {
       toneEffects: {},
       session: undefined,
       isPlaying: false,
-      isPlayPattern: false,
+      isPlayPattern: true,
       rowNumberToPlay: 0,
       isRendering: false,
       autoreplay: false,
       playPatternId: randomHash(),
-      playPattern: {
+      playPatternDefault: {
         clipDuration: "2:0:0",
         channelPatterns: []
-      }
+      },
+      playPatternValue: undefined
     };
   },
   computed: {
@@ -135,33 +136,47 @@ export default {
         };
       },
       set(loadedScribbletuneMakerSession) {
+        this.playPatternValue = loadedScribbletuneMakerSession.playPattern;
         this.channels = {};
         loadedScribbletuneMakerSession.channels.forEach(this.addChannel);
-        this.playPattern = loadedScribbletuneMakerSession.playPattern;
+        this.updatePlayPattern();
+      }
+    },
+    playPattern: {
+      get() {
+        return this.playPatternValue || this.playPatternDefault;
+      },
+      set(value) {
+        this.playPatternValue = value;
       }
     },
     watchPropsForSessionRebuild() {
-      return Object.values(this.channels)
-        .filter(c => c?.isActive)
-        .map(c => {
-          return {
-            instrumentName: c?.instrument?.name,
-            effectNames: c?.effects
-              ? Object.values(c.effects).map(e => e?.name)
-              : undefined,
-            clips: c?.clips,
-            offlineRendering: c?.offlineRendering,
-            idx: c?.idx,
-            instrumentParams: c?.offlineRendering
-              ? c?.instrument?.params
-              : undefined,
-            effectParams: c?.offlineRendering
-              ? c?.effects
-                ? Object.values(c.effects).map(e => e?.params)
+      return {
+        channels: Object.values(this.channels)
+          .filter(c => c?.isActive)
+          .map(c => {
+            return {
+              instrumentName: c?.instrument?.name,
+              effectNames: c?.effects
+                ? Object.values(c.effects).map(e => e?.name)
+                : undefined,
+              clips: c?.clips,
+              offlineRendering: c?.offlineRendering,
+              idx: c?.idx,
+              instrumentParams: c?.offlineRendering
+                ? c?.instrument?.params
+                : undefined,
+              effectParams: c?.offlineRendering
+                ? c?.effects
+                  ? Object.values(c.effects).map(e => e?.params)
+                  : undefined
                 : undefined
-              : undefined
-          };
-        });
+            };
+          }),
+        playPattern: this.isPlayPattern
+          ? this.playPattern
+          : this.rowNumberToPlay
+      };
     },
     channelsIdx() {
       return [
@@ -185,9 +200,6 @@ export default {
           ? Object.values(c.effects).map(e => e?.params)
           : undefined
       );
-    },
-    watchPlayParams() {
-      return this.isPlayPattern ? this.playPattern : this.rowNumberToPlay;
     }
   },
   methods: {
@@ -214,6 +226,7 @@ export default {
     addChannel(channel) {
       let id = randomHash();
       this.$set(this.channels, id, channel);
+      if (typeof channel === "undefined") this.updatePlayPattern();
     },
     removeChannel(id) {
       this.$delete(this.channels, id);
@@ -335,14 +348,11 @@ export default {
         this.isPlaying = true;
       }
     },
-    watchPlayParams: {
+    channelsIdx: {
       deep: true,
       handler() {
-        this.createSession();
+        this.updatePlayPattern();
       }
-    },
-    channelsIdx() {
-      this.updatePlayPattern();
     }
   }
 };

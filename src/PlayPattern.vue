@@ -14,9 +14,6 @@ export default {
   components: { ParamsEditor },
   props: {
     value: { default: [] }
-  },
-  mounted() {
-    this.$emit("input", this.value);
   }
 };
 </script>

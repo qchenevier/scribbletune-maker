@@ -35,9 +35,11 @@
     "random-emoji": "^1.0.2",
     "sass-loader": "^9.0.2",
     "scribbletune": "github:qchenevier/scribbletune#play-pattern",
+    "vue-clipboard2": "^0.3.1",
     "vue-codemirror": "^4.0.6",
     "vue-keypress": "^2.1.1",
     "vue-p5": "^0.8.3",
+    "vue-router": "^3.3.4",
     "yaml": "^1.10.0"
   }
 }

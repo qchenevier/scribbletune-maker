@@ -27,5 +27,11 @@ module.exports = {
   ],
   node: {
     fs: "empty"
+  },
+  // Need vue with the template compiler to use vue-router: https://stackoverflow.com/a/47332729/7539771
+  resolve: {
+    alias: {
+      vue: "vue/dist/vue.js"
+    }
   }
 };
