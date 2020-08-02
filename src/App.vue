@@ -1,43 +1,14 @@
 <template>
   <div id="app">
-    <KeyPress
-      key-event="keydown"
-      :key-code="32"
-      :modifiers="['shiftKey']"
-      @success="
-        () => {
-          this.isPlaying = !this.isPlaying;
-        }
-      "
-    />
-
     <NavBar v-model="scribbletuneMakerSession" />
 
-    <div class="level">
-      <div class="level-left container is-fluid">
-        <PlayPauseButton v-model="isPlaying" :rendering="isRendering" />
-        <b-button
-          rounded
-          size="is-small"
-          :type="this.autoreplay ? 'is-link' : ''"
-          @click="
-            () => {
-              this.autoreplay = !this.autoreplay;
-            }
-          "
-          outlined
-          icon-left="step-forward"
-        />
-        <b-button
-          rounded
-          icon-left="plus"
-          size="is-small"
-          @click="() => addChannel()"
-        >
-          Add channel
-        </b-button>
-      </div>
-    </div>
+    <MainControls
+      :isPlaying="isPlaying"
+      :isRendering="isRendering"
+      :isAutoReplay="isAutoReplay"
+      @toggleVariable="toggleVariable"
+      @addChannel="addChannel"
+    />
 
     <div class="columns container is-fluid main-space" style="overflow-x:auto">
       <div class="column is-narrow" style="padding-left:1px">
@@ -127,12 +98,11 @@
 </template>
 
 <script>
-import PlayPauseButton from "./PlayPauseButton.vue";
 import Channel from "./Channel.vue";
 import * as scribble from "scribbletune";
 import NavBar from "./NavBar.vue";
 import PlayPattern from "./PlayPattern.vue";
-import KeyPress from "vue-keypress";
+import MainControls from "./MainControls.vue";
 
 function randomHash() {
   return Math.floor(Math.random() * 0xffffff)
@@ -147,11 +117,10 @@ scribble.addChord(["1P", "5P", "8P", "12P", "15P", "17M", "19P"], [], "TM");
 
 export default {
   components: {
-    PlayPauseButton,
     Channel,
     NavBar,
     PlayPattern,
-    KeyPress
+    MainControls
   },
   data() {
     return {
@@ -160,10 +129,10 @@ export default {
       toneEffects: {},
       session: undefined,
       isPlaying: false,
+      isRendering: false,
+      isAutoReplay: false,
       isPlayPattern: true,
       rowNumberToPlay: 0,
-      isRendering: false,
-      autoreplay: false,
       playPatternId: randomHash(),
       playPatternDefault: {
         clipDuration: "2:0:0",
@@ -248,6 +217,9 @@ export default {
     }
   },
   methods: {
+    toggleVariable(propertyName) {
+      this[propertyName] = !this[propertyName];
+    },
     createToneTransport() {
       this.session.channels.forEach(c =>
         c.clips.filter(c => c.name === "Player").forEach(c => c.unsync().sync())
@@ -389,7 +361,7 @@ export default {
       this.tonePlayPause();
     },
     isRendering() {
-      if (!this.isRendering && this.autoreplay) {
+      if (!this.isRendering && this.isAutoReplay) {
         this.isPlaying = true;
       }
     },
