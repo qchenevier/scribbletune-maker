@@ -10,7 +10,6 @@ Vue.use(VueRouter);
 Vue.use(Buefy);
 
 const router = new VueRouter({
-  mode: "history",
   routes: [{ path: "/", name: "App", component: App }],
   base: "/"
 });
