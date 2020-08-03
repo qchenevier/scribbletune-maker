@@ -2,9 +2,14 @@
   <b-navbar wrapper-class="container is-fluid">
     <template slot="brand">
       <b-navbar-item>
-        <b-icon size="is-medium" icon="music-circle" type="is-link" />
         <h1 class="title">
-          &nbsp;Scribbleton Live
+          <b-icon
+            size="is-small"
+            icon="music-box-multiple-outline"
+            type="is-link"
+            style="margin-left:0.75rem;margin-right:0.75rem"
+          />
+          Scribbleton Live
         </h1>
       </b-navbar-item>
       <b-navbar-item>

@@ -5,38 +5,68 @@
         <!-- lazy input change for buefy component https://github.com/buefy/buefy/issues/401 -->
         <div class="title is-6">Channel</div>
         <div class="level-right">
-          <b-button
-            rounded
-            size="is-small"
-            :type="input.isActive ? '' : 'is-link'"
-            @click="$set(input, 'isActive', !input.isActive)"
-            outlined
-            :icon-left="input.isActive ? 'pause' : 'play'"
-          />
-          <b-button
-            rounded
-            size="is-small"
-            :type="input.offlineRendering ? 'is-link' : ''"
-            @click="$set(input, 'offlineRendering', !input.offlineRendering)"
-            outlined
-            icon-left="rocket-launch"
-          />
-          <b-button
-            rounded
-            icon-left="close"
-            size="is-small"
-            @click="$emit('close', id)"
-            style="margin-right:unset"
-          />
+          <b-tooltip
+            label="Play/Pause"
+            :delay="1000"
+            type="is-link"
+            position="is-bottom"
+          >
+            <b-button
+              rounded
+              size="is-small"
+              :type="input.isActive ? '' : 'is-link'"
+              @click="$set(input, 'isActive', !input.isActive)"
+              outlined
+              :icon-left="input.isActive ? 'pause' : 'play'"
+            />
+          </b-tooltip>
+          <b-tooltip
+            label="Prerender"
+            :delay="1000"
+            type="is-link"
+            position="is-bottom"
+          >
+            <b-button
+              rounded
+              size="is-small"
+              :type="input.offlineRendering ? 'is-link' : ''"
+              @click="$set(input, 'offlineRendering', !input.offlineRendering)"
+              outlined
+              icon-left="rocket-launch"
+            />
+          </b-tooltip>
+          <b-tooltip
+            label="Close"
+            :delay="1000"
+            type="is-link"
+            position="is-bottom"
+          >
+            <b-button
+              rounded
+              icon-left="close"
+              size="is-small"
+              @click="$emit('close', id)"
+              style="margin-right:unset"
+            />
+          </b-tooltip>
         </div>
       </div>
       <div class="level">
-        <b-input
+        <b-tooltip
+          label="'channelIdx' property used in Play pattern"
+          :delay="1000"
+          type="is-link"
+          position="is-bottom"
+          multilined
           size="is-small"
-          :value="input.idx"
-          @change.native="$set(input, 'idx', $event.target.value)"
-          rounded
-        />
+        >
+          <b-input
+            size="is-small"
+            :value="input.idx"
+            @change.native="$set(input, 'idx', $event.target.value)"
+            rounded
+          />
+        </b-tooltip>
         <b-button
           rounded
           icon-left="creation"

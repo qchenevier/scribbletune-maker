@@ -7,23 +7,42 @@
       @success="$emit('toggleVariable', 'isPlaying')"
     />
     <div class="level">
-      <div class="level-left container is-fluid">
-        <b-button
-          rounded
+      <div class="level-left container is-fluid" style="padding-left:0.5rem">
+        <b-tooltip
+          class="custom-tooltip"
+          position="is-bottom"
+          :label="'Play/Pause\n(shift+space)'"
+          :delay="1000"
+          type="is-link"
+          multilined
           size="is-small"
-          :type="this.isPlaying ? 'is-dark' : 'is-link'"
-          @click="$emit('toggleVariable', 'isPlaying')"
-          :loading="this.isRendering"
-          :icon-left="this.isPlaying ? 'pause' : 'play'"
-        />
-        <b-button
-          rounded
+        >
+          <b-button
+            rounded
+            size="is-small"
+            :type="this.isPlaying ? 'is-dark' : 'is-link'"
+            @click="$emit('toggleVariable', 'isPlaying')"
+            :loading="this.isRendering"
+            :icon-left="this.isPlaying ? 'pause' : 'play'"
+          />
+        </b-tooltip>
+        <b-tooltip
+          position="is-bottom"
+          label="Auto-replay after prerender"
+          :delay="1000"
+          type="is-link"
+          multilined
           size="is-small"
-          :type="this.isAutoReplay ? 'is-link' : ''"
-          @click="$emit('toggleVariable', 'isAutoReplay')"
-          outlined
-          icon-left="step-forward"
-        />
+        >
+          <b-button
+            rounded
+            size="is-small"
+            :type="this.isAutoReplay ? 'is-link' : ''"
+            @click="$emit('toggleVariable', 'isAutoReplay')"
+            outlined
+            icon-left="step-forward"
+          />
+        </b-tooltip>
         <b-button
           rounded
           icon-left="plus"

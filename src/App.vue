@@ -334,4 +334,7 @@ $box-padding: 0.75rem;
   padding-right: 0.75em;
   margin-right: 0.5em;
 }
+.custom-tooltip.b-tooltip:after {
+  white-space: pre;
+}
 </style>

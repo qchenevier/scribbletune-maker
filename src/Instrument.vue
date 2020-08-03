@@ -4,13 +4,20 @@
       <b-select size="is-small" v-model="input.name">
         <option v-for="n in names" :value="n">{{ n }} </option>
       </b-select>
-      <b-button
-        rounded
-        icon-left="close"
-        size="is-small"
-        v-if="closeButton"
-        @click="$emit('close', id)"
-      />
+      <b-tooltip
+        label="Close"
+        :delay="1000"
+        type="is-link"
+        position="is-bottom"
+      >
+        <b-button
+          rounded
+          icon-left="close"
+          size="is-small"
+          v-if="closeButton"
+          @click="$emit('close', id)"
+        />
+      </b-tooltip>
     </div>
     <ParamsEditor
       :key="`instrument-editor-${id}`"
