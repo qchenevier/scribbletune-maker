@@ -11,8 +11,7 @@ Vue.use(Buefy);
 
 const router = new VueRouter({
   mode: "history",
-  routes: [{ path: "/", name: "App", component: App }],
-  base: "/scribbleton-live/"
+  routes: [{ path: "/", name: "App", component: App }]
 });
 
 new Vue({
