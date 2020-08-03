@@ -18,26 +18,53 @@
     </template>
     <template slot="start">
       <b-navbar-item>
-        <b-field class="file">
-          <b-upload size="is-small" v-model="file">
-            <div>
-              <b-icon size="is-small" icon="upload" />
-              <span>Load</span>
-            </div>
-          </b-upload>
-        </b-field>
+        <b-tooltip
+          label="Load JSON file from computer"
+          :delay="1000"
+          type="is-link"
+          position="is-bottom"
+          multilined
+          size="is-small"
+        >
+          <b-field class="file">
+            <b-upload size="is-small" v-model="file">
+              <div>
+                <b-icon size="is-small" icon="upload" />
+                <span>Load</span>
+              </div>
+            </b-upload>
+          </b-field>
+        </b-tooltip>
       </b-navbar-item>
       <b-navbar-item>
-        <div @click="saveJson">
-          <b-icon size="is-small" icon="download" />
-          <span>Save</span>
-        </div>
+        <b-tooltip
+          label="Save JSON file locally"
+          :delay="1000"
+          type="is-link"
+          position="is-bottom"
+          multilined
+          size="is-small"
+        >
+          <div @click="saveJson">
+            <b-icon size="is-small" icon="download" />
+            <span>Save</span>
+          </div>
+        </b-tooltip>
       </b-navbar-item>
       <b-navbar-item>
-        <div @click="getLink">
-          <b-icon size="is-small" icon="share-variant" />
-          <span>Share</span>
-        </div>
+        <b-tooltip
+          label="Save all application satet in a permalink, easy to share"
+          :delay="1000"
+          type="is-link"
+          position="is-bottom"
+          multilined
+          size="is-small"
+        >
+          <div @click="getLink">
+            <b-icon size="is-small" icon="share-variant" />
+            <span>Share</span>
+          </div>
+        </b-tooltip>
       </b-navbar-item>
     </template>
   </b-navbar>
