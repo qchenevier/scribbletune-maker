@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar v-model="scribbletuneMakerSession" />
+    <NavBar v-model="scribbletonLiveSession" />
 
     <MainControls
       :isPlaying="isPlaying"
@@ -73,17 +73,17 @@ export default {
     };
   },
   computed: {
-    scribbletuneMakerSession: {
+    scribbletonLiveSession: {
       get() {
         return {
           channels: Object.values(this.channels),
           playPattern: this.playPattern
         };
       },
-      set(loadedScribbletuneMakerSession) {
-        this.playPatternValue = loadedScribbletuneMakerSession.playPattern;
+      set(loadedLiveSession) {
+        this.playPatternValue = loadedLiveSession.playPattern;
         this.channels = {};
-        loadedScribbletuneMakerSession.channels.forEach(this.addChannel);
+        loadedLiveSession.channels.forEach(this.addChannel);
         this.updatePlayPattern();
       }
     },

@@ -2,7 +2,10 @@
   <b-navbar wrapper-class="container is-fluid">
     <template slot="brand">
       <b-navbar-item>
-        <h1 class="title">Scribbletune Maker</h1>
+        <b-icon size="is-medium" icon="music-circle" type="is-link" />
+        <h1 class="title">
+          &nbsp;Scribbleton Live
+        </h1>
       </b-navbar-item>
       <b-navbar-item>
         <Oscilloscope />
@@ -13,7 +16,7 @@
         <b-field class="file">
           <b-upload size="is-small" v-model="file">
             <div>
-              <b-icon size="is-small" icon="upload"></b-icon>
+              <b-icon size="is-small" icon="upload" />
               <span>Load</span>
             </div>
           </b-upload>
@@ -21,13 +24,13 @@
       </b-navbar-item>
       <b-navbar-item>
         <div @click="saveJson">
-          <b-icon size="is-small" icon="download"></b-icon>
+          <b-icon size="is-small" icon="download" />
           <span>Save</span>
         </div>
       </b-navbar-item>
       <b-navbar-item>
         <div @click="getLink">
-          <b-icon size="is-small" icon="share-variant"></b-icon>
+          <b-icon size="is-small" icon="share-variant" />
           <span>Share</span>
         </div>
       </b-navbar-item>
@@ -59,7 +62,7 @@ export default {
       var blob = new Blob([serializedChannels], {
         type: "text/plain;charset=utf-8"
       });
-      saveAs(blob, "scribbletune-maker-save.json");
+      saveAs(blob, "scribbleton-live.json");
     },
     getLink() {
       let url =

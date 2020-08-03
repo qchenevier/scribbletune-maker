@@ -1,11 +1,11 @@
-# Scribbletune Maker
+# Scribbleton Live
 
 A light digital audio workstation, fully in-browser, leveraging WebAudio, built with:
 
 - [scribbletune](https://scribbletune.com/) & [Tone.js](https://tonejs.github.io/docs/)
 - [Vue.js](https://vuejs.org/)
 
-You can check the [demo here](https://qchenevier.github.io/scribbletune-maker/).
+You can check the [demo here](https://qchenevier.github.io/scribbleton-live/).
 
 ## Installation & Usage
 
